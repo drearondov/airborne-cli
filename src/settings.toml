@@ -1,0 +1,32 @@
+[general]
+ach = true
+ashrae = true
+graphics = true
+interactive = false
+save_graphics = true
+save = true
+save_format = "csv"
+aforo = [30.0, 50.0, 100.0]
+
+[ach]
+max_risk = 3
+mask_default = "KN95"
+inf_percent = [10.0]
+viral_load = 10
+aerosol = 40
+
+[ashrae]
+oficina = {rate_people = 2.5, rate_area = 0.3}
+teatro = {rate_people = 5, rate_area = 0.3}
+aula = {rate_people = 3.8, rate_area = 0.3}
+taller = {rate_people = 5, rate_area = 0.9}
+laboratorio = {rate_people = 5, rate_area = 0.9}
+laboratorio_computacion = {rate_people = 5, rate_area = 0.6}
+
+[graphics]
+template = "plotly_white"
+color_scheme = ["#458588", "#FABD2F", "#B8BB26", "#CC241D", "#B16286", "#8EC07C", "#FE8019"]
+format = "png"
+default_width = 1600
+default_height = 1200
+scale = 2

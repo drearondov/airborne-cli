@@ -1,0 +1,96 @@
+[tool.poetry]
+name = "airborne-cli"
+version = "0.1.0"
+description = "A set of tools used to asess the ventilation quality of a room and the risk of infection"
+authors = ["drearondov <63360808+drearondov@users.noreply.github.com>"]
+license = "GPL-3.0"
+readme = "README.md"
+homepage = "https://github.com/drearondov/airborne-cli"
+repository = "https://github.com/drearondov/airborne-cli"
+documentation = "https://airborne-cli.readthedocs.io"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+]
+
+[tool.poetry.urls]
+Changelog = "https://github.com/drearondov/airborne-cli/releases"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0.0"
+typer = "^0.6.1"
+numpy = "^1.23.1"
+pandas = "^1.4.3"
+jupyter = "^1.0.0"
+plotly = "^5.10.0"
+kaleido = "0.2.1"
+openpyxl = "^3.0.10"
+dash = "^2.6.1"
+rich = "^12.5.1"
+dynaconf = "^3.1.9"
+PyInquirer = "^1.0.3"
+
+[tool.poetry.dev-dependencies]
+Pygments = ">=2.10.0"
+black = "^22.6.0"
+coverage = {extras = ["toml"], version = ">=6.4"}
+darglint = ">=1.8.1"
+flake8 = ">=4.0.1"
+flake8-bandit = ">=2.1.2"
+flake8-bugbear = ">=21.9.2"
+flake8-docstrings = ">=1.6.0"
+flake8-rst-docstrings = ">=0.2.5"
+furo = ">=2021.11.12"
+isort = ">=5.10.1"
+mypy = ">=0.930"
+pathlib = "^1.0.1"
+pep8-naming = ">=0.12.1"
+pre-commit = ">=2.16.0"
+pre-commit-hooks = ">=4.1.0"
+pytest = ">=6.2.5"
+pyupgrade = ">=2.29.1"
+safety = ">=1.10.3"
+sphinx = ">=4.3.2"
+sphinx-autobuild = ">=2021.3.14"
+sphinx-click = ">=3.0.2"
+typeguard = ">=2.13.3"
+xdoctest = {extras = ["colors"], version = ">=0.15.10"}
+myst-parser = {version = ">=0.16.1"}
+nox = "^2022.8.7"
+nox-poetry = "^1.0.1"
+scriv = "^0.16.0"
+
+[tool.poetry.scripts]
+airborne = "main:app" #TODO: Fix entry point
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]
+tests = ["tests", "*/tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["airborne_cli", "tests"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 100
+
+[tool.isort]
+profile = "black"
+force_single_line = true
+lines_after_imports = 2
+
+[tool.mypy]
+strict = true
+warn_unreachable = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+
+[tool.scriv]
+format = "md"
+fragment_directory = "changelog"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

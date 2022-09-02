@@ -1,0 +1,14 @@
+{
+  "_output_dir": "/Users/drea/Library/CloudStorage/GoogleDrive-andrea.rondon@pucp.edu.pe/.shortcut-targets-by-id/1NdsZLZ3inGZVYlEXk4av8GEnHg8npHCM/SAE DyA/Proyecto Ventilacio\u0301n",
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "Andrea Rond\u00f3n",
+  "copyright_year": "2022",
+  "development_status": "Development Status :: 2 - Pre-Alpha",
+  "email": "andrea.rondon@pucp.edu.pe",
+  "friendly_name": "Airborne CLI",
+  "github_user": "drearondov",
+  "license": "GPL-3.0",
+  "package_name": "airborne_cli",
+  "project_name": "airborne-cli",
+  "version": "0.1.0"
+}
