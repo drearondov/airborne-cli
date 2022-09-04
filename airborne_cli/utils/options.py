@@ -2,7 +2,7 @@
 
 Option classes for parameters which require input to chose between different options.
 """
-from enum import Enum, IntEnum
+from enum import Enum
 
 
 class SaveFormat(str, Enum):
@@ -43,15 +43,15 @@ class MaskType(Enum):
     i5 = "on_file"
 
 
-class ViralLoad(IntEnum):
-    i8 = 8
-    i9 = 9
-    i10 = 10
+class ViralLoad(Enum):
+    i8 = "8"
+    i9 = "9"
+    i10 = "10"
 
 
-class AerosolCutoff(IntEnum):
-    i0 = 5
-    i1 = 10
-    i2 = 20
-    i3 = 40
-    i4 = 100
+class AerosolCutoff(Enum):
+    i0 = "5"
+    i1 = "10"
+    i2 = "20"
+    i3 = "40"
+    i4 = "100"

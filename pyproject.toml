@@ -60,7 +60,7 @@ nox-poetry = "^1.0.1"
 scriv = "^0.16.0"
 
 [tool.poetry.scripts]
-airborne = "main:app" #TODO: Fix entry point
+airborne = "airborne_cli.__main__:app"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]

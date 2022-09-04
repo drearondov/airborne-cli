@@ -3,7 +3,7 @@ import pandas as pd
 
 from math import ceil
 
-from src.ach.ach import room_calculation
+from airborne_cli.lib.ach import room_calculation
 
 
 def ach_risk_calculation(data: pd.DataFrame, inf_percent: list) -> pd.DataFrame:

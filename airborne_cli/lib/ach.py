@@ -1,7 +1,6 @@
 import numpy as np
 
 from math import exp, ceil
-from typing import List, Tuple
 
 
 def infected_people(people: int, percent: int, infmin: int, toggle_inf: bool) -> int:
@@ -47,7 +46,7 @@ def room_calculation(
     s_filter_type = 0,
     outside_air = 100,
     inf_checked = True
-) -> Tuple:
+) -> tuple:
     """Returns a tuple containing data of the risk of infection.
 
     Args:
@@ -312,7 +311,7 @@ def room_calculation(
     )
 
 
-def ACH_calculation(
+def ach_required(
     area:float,
     altura:float,
     aforo:int,

@@ -1,19 +1,21 @@
 [general]
-ach = true
+ach = false
 ashrae = true
+risk = true
 graphics = true
 interactive = false
 save_graphics = true
 save = true
 save_format = "csv"
-aforo = [30.0, 50.0, 100.0]
+aforo = [30.0, 40.0, 50.0, 70.0, 100.0]
+aashrae = true
 
 [ach]
-max_risk = 3
+max_risk = 3.0
 mask_default = "KN95"
 inf_percent = [10.0]
-viral_load = 10
-aerosol = 40
+viral_load = "10"
+aerosol = "40"
 
 [ashrae]
 oficina = {rate_people = 2.5, rate_area = 0.3}

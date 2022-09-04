@@ -63,7 +63,7 @@ def save_data(
 def graphics_output(
     results_folder: Path,
     risk_ach_graphics: dict,
-    aerosol_risk_graphics: dict
+    aerosol_risk_graphics: dict = None
 ) -> None:
     """Saves graphics to results folder.
 
@@ -78,5 +78,6 @@ def graphics_output(
     for name, figure in risk_ach_graphics.items():
         figure.write_image(risk_ach_graphs.joinpath(f"{name}.png"))
 
-    for name, figure in aerosol_risk_graphics.items():
-        figure.write_image(risk_aerosol_graphs.joinpath(f"{name}.png"))
+    if aerosol_risk_graphics != None:
+        for name, figure in aerosol_risk_graphics.items():
+            figure.write_image(risk_aerosol_graphs.joinpath(f"{name}.png"))
