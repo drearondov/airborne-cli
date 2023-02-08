@@ -1,32 +1,27 @@
-import pandas as pd
-import plotly.io as pio
-import typer
-
 from itertools import product
 from math import ceil
 from pathlib import Path
 from typing import List
 
-from .settings.config import settings, config_app
+import typer
+
 from .lib.ach import ach_required
 from .lib.ashrae import ashrae_calculation
-from .lib.graphics import risk_ach_graph, risk_flow_graph
-from .lib.risk import ach_risk_calculation, aerosol_risk_calculation
-from .utils.io import load_data, save_data, graphics_output
-from .utils.options import AerosolCutoff, SaveFormat, MaskType, ViralLoad
+from .lib.graphics import risk_ach_graph
+from .lib.risk import ach_risk_calculation
+from .settings.config import config_app
+from .settings.config import settings
+from .utils.io import graphics_output
+from .utils.io import load_data
+from .utils.io import save_data
+from .utils.options import AerosolCutoff
+from .utils.options import MaskType
+from .utils.options import SaveFormat
+from .utils.options import ViralLoad
 
 
 app = typer.Typer(help="CLI interface for ACH and air quality analysis for indoor areas")
 app.add_typer(config_app, name="config")
-
-
-@app.callback()
-def main():
-    pio.templates.default = settings["graphics"]["template"]
-    pio.kaleido.scope.default_format = settings["graphics"]["format"]
-    pio.kaleido.scope.default_width = settings["graphics"]["default_width"]
-    pio.kaleido.scope.default_height = settings["graphics"]["default_height"]
-    pio.kaleido.scope.default_scale = settings["graphics"]["scale"]
 
 
 @app.command()
@@ -68,7 +63,7 @@ def run(
 
     if ashrae == True:
         for occupancy in settings["general"]["aforo"]:
-            data = ashrae_calculation(data, occupancy, settings.ashrae)
+            data = ashrae_calculation(data, occupancy, settings["ashrae"])
 
     if risk == True:
         risk_ach_data = ach_risk_calculation(data, settings["ach"]["inf_percent"])
@@ -77,10 +72,10 @@ def run(
             risk_ach_graphics = risk_ach_graph(risk_ach_data, settings["graphics"]["color_scheme"])
 
     if save == True:
-        results_folder = save_data(data, data_folder, save_format.value, risk_ach_data)
+        results_folder = save_data(data_folder, save_format.value, results=data, risk_ach=risk_ach_data) #FIXME: Create a dict for results, to allow different results
 
         if save_graphics == True:
-            graphics_output(results_folder, risk_ach_graphics)
+            graphics_output(results_folder, risk_ach_graphics) #FIXME: Create a dict for results, to allow different results
 
 
 @app.command()
@@ -109,7 +104,7 @@ def required_ach(
         if type(people) not in [float, int]:
             raise TypeError("Ocuupancy percentage can only be integers or decimals")
         if people < 0:
-            raise ValueError("There cannot be less than zero people in a room right? ¯\_(ツ)_/¯")
+            raise ValueError("There cannot be less than zero people in a room right? ¯\\_(ツ)_/¯")
 
     # Making the calculations
     for occupancy, percent in product(aforo, inf_percent):
@@ -147,10 +142,10 @@ def ashrae(
 
     for people in aforo:
         if people < 0:
-            raise ValueError("There cannot be less than zero people in a room right? ¯\_(ツ)_/¯")
+            raise ValueError("There cannot be less than zero people in a room right? ¯\\_(ツ)_/¯")
 
     for occupancy in aforo:
-        data = ashrae_calculation(data, occupancy, settings.ashrae)
+        data = ashrae_calculation(data, occupancy, settings["ashrae"])
 
     if save == True:
         _ = save_data(data, data_folder, save_format.value)
@@ -178,5 +173,13 @@ def risk_analysis(
     if save == True:
         results_folder = save_data(data, data_folder, save_format.value)
         if save_graphics == True:
-            save_graphics(results_folder, risk_ach_graphics)
+            save_graphics(results_folder, risk_ach_graphics) #FIXME: Create a dict for results, to allow different results
 
+
+# @app.command(name="dash")
+# def dashboard_app(
+#     data_in: Path = typer.Argument(..., exists=True, help="Filepath where the data for analysis is stored. To know the required fields for the data, read the docs.")
+# ) -> None:
+#     """
+#     Fires up a dashboard for analysis.
+#     """

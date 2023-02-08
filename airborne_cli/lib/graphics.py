@@ -1,5 +1,9 @@
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.io as pio
+
+from ..settings.config import settings
+
 
 
 def risk_ach_graph(data: pd.DataFrame, colors:list) -> dict:
@@ -12,6 +16,12 @@ def risk_ach_graph(data: pd.DataFrame, colors:list) -> dict:
     Returns:
         dict: List of figures and identifiers
     """
+    pio.templates.default = settings["graphics"]["template"]
+    pio.kaleido.scope.default_format = settings["graphics"]["format"]
+    pio.kaleido.scope.default_width = settings["graphics"]["default_width"]
+    pio.kaleido.scope.default_height = settings["graphics"]["default_height"]
+    pio.kaleido.scope.default_scale = settings["graphics"]["scale"]
+
     pabellon_figs = {}
     for pabellon in data["pabellon"].unique():
         pabellon_data = data[data["pabellon"] == pabellon]    

@@ -3,7 +3,7 @@ import numpy as np
 from math import exp, ceil
 
 
-def infected_people(people: int, percent: int, infmin: int, toggle_inf: bool) -> int:
+def infected_people(people: int, percent: float, infmin: int, toggle_inf: bool) -> int:
     """Returns the number of infected people for a certain population.
 
     Args:
@@ -27,10 +27,10 @@ def gaussian_distribution(n_people=10, permanence=120, t=0):
 
 # Default values
 def room_calculation(
-    Ar = 100,
-    Hr = 3,
+    Ar: float = 100,
+    Hr:float = 3,
     s_ACH_type = 6,
-    inf_percent = 10,
+    inf_percent:float = 10,
     inf_min = 1,
     n_people = 10,
     Vli = 10,
@@ -42,7 +42,7 @@ def room_calculation(
     verticalv_type = 0,
     occupancy_type = 0,
     permanence = 120,
-    ACH_custom = 20,
+    ACH_custom:float = 20,
     s_filter_type = 0,
     outside_air = 100,
     inf_checked = True
@@ -77,7 +77,7 @@ def room_calculation(
     # People over time
     def people_inst(permanence, t) -> dict:
         people = n_people if occupancy_type == 0 else gaussian_distribution(n_people, permanence, t)
-        infected = infected_people(people, inf_percent, inf_min, inf_checked)
+        infected = infected_people(ceil(people), inf_percent, inf_min, inf_checked)
 
         return {"people": people, "infected": infected}
 
@@ -319,7 +319,7 @@ def ach_required(
     permanencia:int,
     set_risk:float=0.03,
     mask_type:int=1,
-    inf_percent:int=10,
+    inf_percent:float=10,
     viral_load:int=10,
     cutoff_type:int = 3
     ) -> float:
@@ -388,33 +388,33 @@ def risk_calculation(area:float, altura:float, aforo:int, actividad:int, permane
     return max_risk
 
 
-def occupancy(area:float, altura:float, actividad:int, permanencia:int, ach:float, inf_percent=10.0) -> dict:
-    """Función que calcula el aforo para llegar a un riesgo máximo de 3% +- 0.05
+# def occupancy(area:float, altura:float, actividad:int, permanencia:int, ach:float, inf_percent=10.0) -> dict:
+#     """Función que calcula el aforo para llegar a un riesgo máximo de 3% +- 0.05
 
-    Args:
-        area (float): area del ambiente
-        altura (float): altura del ambiente
-        actividad (int): tipo de actividad que se está realizando
-        permanencia (int): tiempo en el aeropuerto
-        ach (float): renovaciones por ambiente
+#     Args:
+#         area (float): area del ambiente
+#         altura (float): altura del ambiente
+#         actividad (int): tipo de actividad que se está realizando
+#         permanencia (int): tiempo en el aeropuerto
+#         ach (float): renovaciones por ambiente
 
-    Returns:
-        results (int): diccionario que contiene el número de personas permitidas y la data asociada
-    """
+#     Returns:
+#         results (int): diccionario que contiene el número de personas permitidas y la data asociada
+#     """
 
-    aforo = 0
-    max_risk = 0
+#     aforo = 0
+#     max_risk = 0
 
-    while max_risk < 0.03:
-        aforo += 1
-        (_, R, XCO2, _,_, _, _) = room_calculation(Ar = area, Hr = altura, n_people = aforo, activity_type = actividad, activity_type_sick = actividad, permanence = permanencia, ACH_custom = ach, inf_percent = inf_percent)
+#     while max_risk < 0.03:
+#         aforo += 1
+#         (_, R, XCO2, _,_, _, _) = room_calculation(Ar = area, Hr = altura, n_people = aforo, activity_type = actividad, activity_type_sick = actividad, permanence = permanencia, ACH_custom = ach, inf_percent = inf_percent)
 
-        max_risk = R[-1]
+#         max_risk = R[-1]
 
-    results = {
-        "aforo": aforo,
-        "co2_contagiosidad": XCO2[-1],
-        "riesgo_contagiosidad": R[-1]
-    }
+#     results = {
+#         "aforo": aforo,
+#         "co2_contagiosidad": XCO2[-1],
+#         "riesgo_contagiosidad": R[-1]
+#     }
 
-    return results
+#     return results

@@ -10,8 +10,8 @@
             "request": "launch",
             "module": "airborne_cli.${fileBasenameNoExtension}",
             "args": [
-                "required-ach",
-                "--help"
+                "config",
+                "show"
             ],
             "justMyCode": true
         },

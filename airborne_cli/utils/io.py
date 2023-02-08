@@ -1,9 +1,10 @@
 import pandas as pd
 
 from pathlib import Path
+from typing import Optional
 
 
-def load_data(data_in: str) -> tuple:
+def load_data(data_in: Path) -> tuple:
     """Loads the data from the specified path
 
     Args:
@@ -24,36 +25,40 @@ def load_data(data_in: str) -> tuple:
         case ".json":
             data = pd.read_json(data_path)
 
-    return (data, data_folder)
+    return (data, data_folder) #type:ignore
 
 
 def save_data(
-    data: pd.DataFrame,
     data_folder: Path,
     save_format: str,
-    risk_ach_data: pd.DataFrame = None,
-    aerosol_risk_data: pd.DataFrame = None,
+    **data_to_save
 ) -> Path:
     """Saves data results to folder in format specified.
 
     Args:
-        data (pd.DataFrame): Main calculation results for rooms
         data_folder (Path): Folder where data is stored
         save_format (str): Format to store data
-        risk_ach_data (pd.DataFrame, optional): _description_. Defaults to None.
-        aerosol_risk_data (pd.DataFrame, optional): _description_. Defaults to None.
+        **data_to_save: Names and pd.DataFrame to save
+
+    Returns:
+        Path: Path of the results folder
     """
 
-    results_folder = data_folder.joinpath("results").mkdir()
+    results_folder = data_folder.joinpath("results")
+    results_folder.mkdir()
 
     if save_format == "csv":
-        data.to_csv(results_folder.joinpath("results.csv"))
-        risk_ach_data.to_csv(results_folder.joinpath("risk_ach.csv"))
-        aerosol_risk_data.to_csv(results_folder.joinpath("rishk_flow_aorosol.csv"))
+        for name, df in data_to_save.items():
+            df.to_csv(results_folder.joinpath(f"{name}.csv"))
+            # data.to_csv(results_folder.joinpath("results.csv"))
+            # risk_ach_data.to_csv(results_folder.joinpath("risk_ach.csv"))
+            # aerosol_risk_data.to_csv(results_folder.joinpath("risk_flow_aorosol.csv"))
     elif save_format == "xlsx":
-        data.to_excel(results_folder.joinpath("results.xlsx"))
-        risk_ach_data.to_excel(results_folder.joinpath("risk_ach.xlsx"))
-        aerosol_risk_data.to_excel(results_folder.joinpath("rishk_flow_aorosol.xlsx"))
+        for name, df in data_to_save.items():
+            df.to_excel(results_folder.joinpath(f"{name}.xlsx"))
+            # data.to_excel(results_folder.joinpath("results.xlsx"))
+            # risk_ach_data.to_excel(results_folder.joinpath("risk_ach.xlsx"))
+            # aerosol_risk_data.to_excel(results_folder.joinpath("rishk_flow_aorosol.xlsx"))
     else:
         print("[bold red]Alert![/bold red] Extension not supported")
 
@@ -63,7 +68,7 @@ def save_data(
 def graphics_output(
     results_folder: Path,
     risk_ach_graphics: dict,
-    aerosol_risk_graphics: dict = None
+    aerosol_risk_graphics: Optional[dict] = None
 ) -> None:
     """Saves graphics to results folder.
 
@@ -72,8 +77,10 @@ def graphics_output(
         risk_ach_graphics (dict): Dictionary where risk graphics are stored
         aerosol_risk_graphics (dict): Dictionary where aerosol graphics are stored
     """
-    risk_ach_graphs = results_folder.joinpath("risk_ach").mkdir()
-    risk_aerosol_graphs = results_folder.joinpath("risk_ach").mkdir()
+    risk_ach_graphs = results_folder.joinpath("risk_ach")
+    risk_ach_graphs.mkdir()
+    risk_aerosol_graphs = results_folder.joinpath("risk_ach")
+    risk_aerosol_graphs.mkdir()
 
     for name, figure in risk_ach_graphics.items():
         figure.write_image(risk_ach_graphs.joinpath(f"{name}.png"))

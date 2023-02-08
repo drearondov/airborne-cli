@@ -1,10 +1,20 @@
-import typer
-
 from typing import List
+
+import typer
 from rich.console import Console
 
-from .io import load_config, save_config, show_general, show_ach, show_ashrae, show_graphics
-from ..utils.options import AerosolCutoff, SaveFormat, MaskType, ViralLoad, GraphicTemplate, GraphicFormat
+from ..utils.options import AerosolCutoff
+from ..utils.options import GraphicFormat
+from ..utils.options import GraphicTemplate
+from ..utils.options import MaskType
+from ..utils.options import SaveFormat
+from ..utils.options import ViralLoad
+from .io import load_config
+from .io import save_config
+from .io import show_ach
+from .io import show_ashrae
+from .io import show_general
+from .io import show_graphics
 
 
 settings = load_config()

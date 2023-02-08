@@ -12,3 +12,4 @@ __pycache__/
 # Ignore dynaconf secret files
 .secrets.*
 .todo
+result.prof

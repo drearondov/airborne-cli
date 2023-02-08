@@ -1,5 +1,4 @@
 import tomlkit
-
 from rich.panel import Panel
 from rich.table import Table
 
