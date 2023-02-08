@@ -2,15 +2,15 @@
 
 > Note: This project is **still** under active development/testing.
 
-[![Status](https://img.shields.io/pypi/status/airborne-cli.svg)][status]
-[![Python Version](https://img.shields.io/pypi/pyversions/airborne-cli)][python version]
-[![License](https://img.shields.io/pypi/l/airborne-cli)][license]
+[![Status](https://img.shields.io/pypi/status/airborne-cli.svg?style=flat-square)][status]
+[![Python Version](https://img.shields.io/pypi/pyversions/airborne-cli?style=flat-square)][python version]
+[![License](https://img.shields.io/github/license/drearondov/airborne-cli?style=flat-square)][license]
 
-[![Read the documentation at https://airborne-cli.readthedocs.io/](https://img.shields.io/readthedocs/airborne-cli/latest.svg?label=Read%20the%20Docs)][read the docs]
+[![Read the documentation at https://airborne-cli.readthedocs.io/](https://img.shields.io/readthedocs/airborne-cli/latest.svg?label=Read%20the%20Docs&style=flat-square)][read the docs]
 [![Tests](https://github.com/drearondov/airborne-cli/workflows/Tests/badge.svg)][tests]
 [![Codecov](https://codecov.io/gh/drearondov/airborne-cli/branch/main/graph/badge.svg)][codecov]
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
-[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=flat-square)][pre-commit]
+[![Black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)][black]
 
 [status]: https://pypi.org/project/airborne-cli/
 [python version]: https://pypi.org/project/airborne-cli
