@@ -100,7 +100,7 @@ This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter]
 [hypermodern python cookiecutter]: https://github.com/cjolowicz/cookiecutter-hypermodern-python
 [file an issue]: https://github.com/drearondov/airborne-cli/issues
 [pip]: https://pip.pypa.io/
-[PyPI]: https://pypi.org
+[pypi]: https://pypi.org
 
 <!-- github-only -->
 

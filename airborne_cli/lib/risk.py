@@ -1,7 +1,7 @@
+from math import ceil
+
 import numpy as np
 import pandas as pd
-
-from math import ceil
 
 from airborne_cli.lib.ach import room_calculation
 
@@ -24,7 +24,7 @@ def ach_risk_calculation(data: pd.DataFrame, inf_percent: list) -> pd.DataFrame:
         "Aforo_100": [],
         "ach": [],
         "ach_natural": [],
-        "infected": []
+        "infected": [],
     }
 
     for infected in inf_percent:
@@ -44,7 +44,7 @@ def ach_risk_calculation(data: pd.DataFrame, inf_percent: list) -> pd.DataFrame:
     for ambiente in data.itertuples(index=False, name="Ambiente"):
 
         for ach in ach_list:
-            
+
             results["ambiente"].append(ambiente.Ambiente)
             results["pabellon"].append(ambiente.Pabellon)
             results["ach"].append(ach)
@@ -55,27 +55,91 @@ def ach_risk_calculation(data: pd.DataFrame, inf_percent: list) -> pd.DataFrame:
 
                 results["infected"].append(inf_percent)
 
-                (_, R, _, _,_, _, _) = room_calculation(Ar = ambiente.Area, Hr = ambiente.Altura, n_people = ceil(ambiente.Aforo_100*0.3), activity_type = ambiente.Actividad, activity_type_sick = ambiente.Actividad, permanence = ambiente.Permanencia, ACH_custom = ach, inf_percent=infected)
-                results[f"aforo_30_{infected}_inf"].append(ceil(ambiente.Aforo_100*0.3))
+                (_, R, _, _, _, _, _) = room_calculation(
+                    Ar=ambiente.Area,
+                    Hr=ambiente.Altura,
+                    n_people=ceil(ambiente.Aforo_100 * 0.3),
+                    activity_type=ambiente.Actividad,
+                    activity_type_sick=ambiente.Actividad,
+                    permanence=ambiente.Permanencia,
+                    ACH_custom=ach,
+                    inf_percent=infected,
+                )
+                results[f"aforo_30_{infected}_inf"].append(
+                    ceil(ambiente.Aforo_100 * 0.3)
+                )
                 results[f"riesgo_30_{infected}_inf"].append(R[-1])
 
-                (_, R, _, _,_, _, _) = room_calculation(Ar = ambiente.Area, Hr = ambiente.Altura, n_people = ceil(ambiente.Aforo_100*0.5), activity_type = ambiente.Actividad, activity_type_sick = ambiente.Actividad, permanence = ambiente.Permanencia, ACH_custom = ach, inf_percent=infected)
-                results[f"aforo_40_{infected}_inf"].append(ceil(ambiente.Aforo_100*0.4))
+                (_, R, _, _, _, _, _) = room_calculation(
+                    Ar=ambiente.Area,
+                    Hr=ambiente.Altura,
+                    n_people=ceil(ambiente.Aforo_100 * 0.5),
+                    activity_type=ambiente.Actividad,
+                    activity_type_sick=ambiente.Actividad,
+                    permanence=ambiente.Permanencia,
+                    ACH_custom=ach,
+                    inf_percent=infected,
+                )
+                results[f"aforo_40_{infected}_inf"].append(
+                    ceil(ambiente.Aforo_100 * 0.4)
+                )
                 results[f"riesgo_40_{infected}_inf"].append(R[-1])
 
-                (_, R, _, _,_, _, _) = room_calculation(Ar = ambiente.Area, Hr = ambiente.Altura, n_people = ceil(ambiente.Aforo_100*0.5), activity_type = ambiente.Actividad, activity_type_sick = ambiente.Actividad, permanence = ambiente.Permanencia, ACH_custom = ach, inf_percent=infected)
-                results[f"aforo_50_{infected}_inf"].append(ceil(ambiente.Aforo_100*0.5))
+                (_, R, _, _, _, _, _) = room_calculation(
+                    Ar=ambiente.Area,
+                    Hr=ambiente.Altura,
+                    n_people=ceil(ambiente.Aforo_100 * 0.5),
+                    activity_type=ambiente.Actividad,
+                    activity_type_sick=ambiente.Actividad,
+                    permanence=ambiente.Permanencia,
+                    ACH_custom=ach,
+                    inf_percent=infected,
+                )
+                results[f"aforo_50_{infected}_inf"].append(
+                    ceil(ambiente.Aforo_100 * 0.5)
+                )
                 results[f"riesgo_50_{infected}_inf"].append(R[-1])
 
-                (_, R, _, _,_, _, _) = room_calculation(Ar = ambiente.Area, Hr = ambiente.Altura, n_people = ceil(ambiente.Aforo_100*0.7), activity_type = ambiente.Actividad, activity_type_sick = ambiente.Actividad, permanence = ambiente.Permanencia, ACH_custom = ach, inf_percent=infected)
-                results[f"aforo_70_{infected}_inf"].append(ceil(ambiente.Aforo_100*0.7))
+                (_, R, _, _, _, _, _) = room_calculation(
+                    Ar=ambiente.Area,
+                    Hr=ambiente.Altura,
+                    n_people=ceil(ambiente.Aforo_100 * 0.7),
+                    activity_type=ambiente.Actividad,
+                    activity_type_sick=ambiente.Actividad,
+                    permanence=ambiente.Permanencia,
+                    ACH_custom=ach,
+                    inf_percent=infected,
+                )
+                results[f"aforo_70_{infected}_inf"].append(
+                    ceil(ambiente.Aforo_100 * 0.7)
+                )
                 results[f"riesgo_70_{infected}_inf"].append(R[-1])
 
-                (_, R, _, _,_, _, _) = room_calculation(Ar = ambiente.Area, Hr = ambiente.Altura, n_people = ceil(ambiente.Aforo_100*0.9), activity_type = ambiente.Actividad, activity_type_sick = ambiente.Actividad, permanence = ambiente.Permanencia, ACH_custom = ach, inf_percent=infected)
-                results[f"aforo_90_{infected}_inf"].append(ceil(ambiente.Aforo_100*0.9))
+                (_, R, _, _, _, _, _) = room_calculation(
+                    Ar=ambiente.Area,
+                    Hr=ambiente.Altura,
+                    n_people=ceil(ambiente.Aforo_100 * 0.9),
+                    activity_type=ambiente.Actividad,
+                    activity_type_sick=ambiente.Actividad,
+                    permanence=ambiente.Permanencia,
+                    ACH_custom=ach,
+                    inf_percent=infected,
+                )
+                results[f"aforo_90_{infected}_inf"].append(
+                    ceil(ambiente.Aforo_100 * 0.9)
+                )
                 results[f"riesgo_90_{infected}_inf"].append(R[-1])
 
-                (_, R, _, _,_, _, _) = room_calculation(Ar = ambiente.Area, Hr = ambiente.Altura, n_people = ceil(ambiente.Aforo_100), activity_type = ambiente.Actividad, activity_type_sick = ambiente.Actividad, permanence = ambiente.Permanencia, ACH_custom = ach, inf_percent=infected)
+                (_, R, _, _, _, _, _) = room_calculation(
+                    Ar=ambiente.Area,
+                    Hr=ambiente.Altura,
+                    n_people=ceil(ambiente.Aforo_100),
+                    activity_type=ambiente.Actividad,
+                    activity_type_sick=ambiente.Actividad,
+                    permanence=ambiente.Permanencia,
+                    ACH_custom=ach,
+                    inf_percent=infected,
+                )
                 results[f"aforo_100_{infected}_inf"].append(ceil(ambiente.Aforo_100))
                 results[f"riesgo_100_{infected}_inf"].append(R[-1])
 
@@ -83,7 +147,8 @@ def ach_risk_calculation(data: pd.DataFrame, inf_percent: list) -> pd.DataFrame:
 
     return results_df
 
-def aerosol_risk_calculation(data: pd.DataFrame) -> pd.DataFrame:
+
+def aerosol_risk_calculation(data: pd.DataFrame, aerosol_cutoff: list) -> pd.DataFrame:
     """Maximum risk for different flow rates at different aerosol cuttoff.
 
     Args:
@@ -106,17 +171,26 @@ def aerosol_risk_calculation(data: pd.DataFrame) -> pd.DataFrame:
     for ambiente in data.itertuples(index=False, name="Ambiente"):
 
         for ach in ach_list:
-            
+
             results["ambiente"].append(ambiente.Ambiente)
             results["pabellon"].append(ambiente.Pabellon)
             results["volumen"].append(ambiente.Volumen)
             results["ach"].append(ach)
 
-            (_, R, _, _,_, _, _) = room_calculation(Ar = ambiente.Area, Hr = ambiente.Altura, n_people = ambiente.Aforo_100, activity_type = ambiente.Actividad, activity_type_sick = ambiente.Actividad, permanence = ambiente.Permanencia, ACH_custom = ach, inf_percent=10, cutoff_type = 2)
-            results[f"riesgo_20_um"].append(R[-1])
+            for cutoff in aerosol_cutoff:
 
-            (_, R, _, _,_, _, _) = room_calculation(Ar = ambiente.Area, Hr = ambiente.Altura, n_people = ambiente.Aforo_100, activity_type = ambiente.Actividad, activity_type_sick = ambiente.Actividad, permanence = ambiente.Permanencia, ACH_custom = ach, inf_percent=10, cutoff_type = 3)
-            results[f"riesgo_40_um"].append(R[-1])
+                (_, R, _, _, _, _, _) = room_calculation(
+                    Ar=ambiente.Area,
+                    Hr=ambiente.Altura,
+                    n_people=ambiente.Aforo_100,
+                    activity_type=ambiente.Actividad,
+                    activity_type_sick=ambiente.Actividad,
+                    permanence=ambiente.Permanencia,
+                    ACH_custom=ach,
+                    inf_percent=10,
+                    cutoff_type=cutoff,
+                )
+                results[f"riesgo_{cutoff}_um"].append(R[-1])
 
     results_df = pd.DataFrame.from_dict(results)
 

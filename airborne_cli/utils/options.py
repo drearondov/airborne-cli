@@ -21,16 +21,16 @@ class GraphicFormat(str, Enum):
 
 
 class GraphicTemplate(str, Enum):
-    ggplot2 = "ggplot2",
-    seaborn =  "seaborn",
-    simple_white = "simple_white", 
-    plotly = "plotly",
-    plotly_white = "plotly_white",
-    plotly_dark = "plotly_dark",
-    presentation = "presentation",
-    xgridoff = "xgridoff",
-    ygridoff = "ygridoff",
-    gridon = "gridon",
+    ggplot2 = ("ggplot2",)
+    seaborn = ("seaborn",)
+    simple_white = ("simple_white",)
+    plotly = ("plotly",)
+    plotly_white = ("plotly_white",)
+    plotly_dark = ("plotly_dark",)
+    presentation = ("presentation",)
+    xgridoff = ("xgridoff",)
+    ygridoff = ("ygridoff",)
+    gridon = ("gridon",)
     none = "none"
 
 

@@ -1,10 +1,10 @@
-import pandas as pd
-
 from pathlib import Path
 from typing import Optional
 
+import pandas as pd
 
-def load_data(data_in: Path) -> tuple:
+
+def load_data(data_in: Path) -> tuple[pd.DataFrame, Path] | None:
     """Loads the data from the specified path
 
     Args:
@@ -24,14 +24,34 @@ def load_data(data_in: Path) -> tuple:
             data = pd.read_csv(data_path)
         case ".json":
             data = pd.read_json(data_path)
+        case _:
+            raise ValueError(
+                "Format not supported, only .xlsx, .csv and .json are supported"
+            )
 
-    return (data, data_folder) #type:ignore
+    if check_data(data.columns):
+        return (data, data_folder)
+    else:
+        raise ValueError(
+            "Check that input data contains all the required columns"
+        )
+
+
+def check_data(data_columns: pd.Index) -> bool:
+    """Checks if the Data Frame entered has the appropriate columns and data types.
+
+    Args:
+        data (pd.DataFrame): Data frame entered
+    """
+    required_columns = ["area", "altura", "aforo", "actividad", "permanencia"]
+
+    return all(parameter in data_columns for parameter in required_columns)
 
 
 def save_data(
-    data_folder: Path,
-    save_format: str,
-    **data_to_save
+        data_folder: Path,
+        save_format: str,
+        data_to_save: dict[str, pd.DataFrame]
 ) -> Path:
     """Saves data results to folder in format specified.
 
@@ -68,7 +88,7 @@ def save_data(
 def graphics_output(
     results_folder: Path,
     risk_ach_graphics: dict,
-    aerosol_risk_graphics: Optional[dict] = None
+    aerosol_risk_graphics: Optional[dict] = None,
 ) -> None:
     """Saves graphics to results folder.
 
@@ -79,7 +99,7 @@ def graphics_output(
     """
     risk_ach_graphs = results_folder.joinpath("risk_ach")
     risk_ach_graphs.mkdir()
-    risk_aerosol_graphs = results_folder.joinpath("risk_ach")
+    risk_aerosol_graphs = results_folder.joinpath("risk_aerosol")
     risk_aerosol_graphs.mkdir()
 
     for name, figure in risk_ach_graphics.items():

@@ -9,7 +9,9 @@ def load_config() -> tomlkit.TOMLDocument:
     Returns:
         TOMLDocument: Dictionary with settings
     """
-    with open("airborne_cli/settings.toml", mode="rt", encoding="utf-8") as settings_file:
+    with open(
+        "airborne_cli/settings.toml", encoding="utf-8"
+    ) as settings_file:
         config = tomlkit.load(settings_file)
 
     return config
@@ -21,7 +23,9 @@ def save_config(config: tomlkit.TOMLDocument) -> None:
     Args:
         config (tomlkit.TOMLDocument): Config object ready to save
     """
-    with open("airborne_cli/settings.toml", mode="wt", encoding="utf-8") as settings_file:
+    with open(
+        "airborne_cli/settings.toml", mode="w", encoding="utf-8"
+    ) as settings_file:
         settings_file.write(tomlkit.dumps(config))
 
 
