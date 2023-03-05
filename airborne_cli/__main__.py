@@ -34,11 +34,12 @@ def run(
         help="Filepath where the data for analysis is stored. To know the required fields for the data and the supported file formats read the docs.",
     ),
     ach: bool = typer.Option(
-        settings["general"]["ach"], help="Do ACH calculations with default values"
+        settings["general"]["ach"],
+        help="Make Required ACH calculations with default values",
     ),
     ashrae: bool = typer.Option(
         settings["general"]["ashrae"],
-        help="Do ventilation calculation requirements according to ASHRAE recomendations with default values",
+        help="Make Room ventilation requirements according to ASHRAE recomendations with default values",
     ),
     risk: bool = typer.Option(
         settings["general"]["risk"],
@@ -46,11 +47,11 @@ def run(
     ),
     graphics: bool = typer.Option(
         settings["general"]["graphics"],
-        help="Make graphics during analysis (Requires kaleido and plotly to be installed). Results are saved on the same directory as the data file. Can be changed in settings.",
+        help="Make graphics during analysis (Requires kaleido and plotly to be installed).",
     ),
     save_graphics: bool = typer.Option(
         settings["general"]["save_graphics"],
-        help="Save the graphics made or just show them during analysis",
+        help="Save the graphics made. If `false`, program wil just show them during analysis",
     ),
     save: bool = typer.Option(
         settings["general"]["save"], help="Save results to files for analysis"
@@ -62,7 +63,9 @@ def run(
     ),
 ) -> None:
     """
-    Runs calculations using default values. To see or change values run airborne config --help
+    Shortcut function to run calculation with default values.
+    By default runs Required ACH, ASHRAE ventilation requirement calculations using default values and makes and saves graphics.
+    To see configuration options and default values use airborne config --help
     """
     (data, data_folder) = load_data(data_in)
 

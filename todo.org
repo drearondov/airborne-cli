@@ -1,0 +1,28 @@
+#+title: TODO Document for Airborne CLI
+
+* General:
+** TODO Testing
+*** TODO Setup Nox environment
+*** TODO Write main tests
+*** TODO Write settings tests
+*** TODO Write backend tests
+** TODO Documentation
+*** TODO Write documentation strings for CLI
+*** TODO Use MkDocs to compile documentation
+*** TODO Use Diataxis method for compiling documentation
+** DONE Source Code
+- [x] Write source code @done(22-08-31 14:53)
+- [x] Write CLI code @done(22-08-31 14:53)
+- [x] Refactor code @critical @done(22-09-03 15:46)
+
+* ACH:
+- [x] Set defaults @done(22-08-24 10:50)
+- [x] Write main function @done(22-08-31 14:51)
+
+* ASHRAE:
+- [x] Write main function @done(22-08-31 14:51)
+
+
+* Plots:
+- [x] Gráfica ACH - riesgo @done(22-08-31 14:51)
+- [x] Gráfica ACH - aforo @done(22-08-31 14:51)

@@ -8,7 +8,6 @@ save_graphics = true
 save = true
 save_format = "csv"
 aforo = [30.0, 40.0, 50.0, 70.0, 100.0]
-ashrae = true
 default_aerosol = "40"
 
 [ach]

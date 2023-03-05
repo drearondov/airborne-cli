@@ -1,23 +1,95 @@
 import tomlkit
+
+from rich import print
 from rich.panel import Panel
 from rich.table import Table
 
+from pathlib import Path
 
-def load_config() -> tomlkit.TOMLDocument:
+from tomlkit import document, nl, table
+
+
+def load_config() -> dict:
     """Loads TOML configuration file and returns a dictionary with all the variables.
 
     Returns:
         TOMLDocument: Dictionary with settings
     """
-    with open(
-        "airborne_cli/settings.toml", encoding="utf-8"
-    ) as settings_file:
-        config = tomlkit.load(settings_file)
+    if Path("airborne_cli/settings.toml").exists():
+        with open("airborne_cli/settings.toml", encoding="utf-8") as settings_file:
+            config = tomlkit.load(settings_file)
+
+        return dict(config)
+    else:
+        print(
+            "[bold red]Alert![/bold red] Settings file not found. Generating default file."
+        )
+        config = generate_config()
+        save_config(config)
+        return config
+
+
+def generate_config() -> tomlkit.TOMLDocument:
+    """Generates and saves new config file if for whatver reason default one gets deleted or the user wants to go back to the defaults.
+
+    Returns:
+        TOMLDocument: Dictionary with default settings
+    """
+    config = document()
+
+    general = table()
+    ach = table()
+    ashrae = table()
+    graphics = table()
+
+    general["ach"] = False
+    general["ashrae"] = True
+    general["risk"] = True
+    general["graphics"] = True
+    general["interactive"] = False
+    general["save_graphics"] = True
+    general["save"] = True
+    general["save_format"] = "csv"
+    general["aforo"] = [30.0, 40.0, 50.0, 70.0, 100.0]
+    general["default_aerosol"] = "40"
+
+    ach["max_risk"] = 3.0
+    ach["mask_default"] = "KN95"
+    ach["inf_percent"] = [10.0]
+    ach["viral_load"] = "10"
+    ach["aerosol"] = ["20", "40", "100"]
+
+    ashrae["oficina"] = {"rate_people": 2.5, "rate_area": 0.3}
+    ashrae["teatro"] = {"rate_people": 5, "rate_area": 0.3}
+    ashrae["aula"] = {"rate_people": 3.8, "rate_area": 0.3}
+    ashrae["taller"] = {"rate_people": 5, "rate_area": 0.9}
+    ashrae["laboratorio"] = {"rate_people": 5, "rate_area": 0.9}
+    ashrae["laboratorio_computacion"] = {"rate_people": 5, "rate_area": 0.6}
+
+    graphics["template"] = "plotly_white"
+    graphics["color_scheme"] = [
+        "#458588",
+        "#FABD2F",
+        "#B8BB26",
+        "#CC241D",
+        "#B16286",
+        "#8EC07C",
+        "#FE8019",
+    ]
+    graphics["format"] = "png"
+    graphics["default_width"] = 1600
+    graphics["default_height"] = 1200
+    graphics["scale"] = 2
+
+    config.add("general", general)
+    config.add(nl())
+    config.add("ach", ach)
+    config.add(nl())
 
     return config
 
 
-def save_config(config: tomlkit.TOMLDocument) -> None:
+def save_config(config: tomlkit.TOMLDocument | dict) -> None:
     """Saves new configuration file.
 
     Args:
@@ -40,7 +112,7 @@ def show_general() -> Panel:
     table = Table(show_header=False, box=None)
 
     for key, value in settings["general"].items():
-        if type(value) != tomlkit.items.Array:
+        if type(value) != list:
             table.add_row(key, f"{value}")
         else:
             table.add_row(key, f"{list(value)}")
@@ -95,7 +167,7 @@ def show_graphics() -> Panel:
     table = Table(show_header=False, box=None)
 
     for key, value in settings["graphics"].items():
-        if type(value) != tomlkit.items.Array:
+        if type(value) != list:
             table.add_row(key, f"{value}")
         else:
             table.add_row(key, f"{list(value)}")

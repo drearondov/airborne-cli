@@ -1,0 +1,16 @@
+site_name: Airborne-CLI Documentation
+repo_url: https://github.com/drearondov/airborne-cli
+
+theme:
+  name: gitbook
+
+nav:
+  - "Getting Started":
+      - Tutorials: "tutorials.md"
+      - How-To Guides: "how-to-guides.md"
+      - Explanation: "explanation.md"
+  - API: "reference.md"
+  - Reference:
+      - "License": "LICENSE.md"
+      - "Contributing": "CONTRIBUTING.md"
+      - "Code of Conduct": "CODE_OF-CONDUCT.md"

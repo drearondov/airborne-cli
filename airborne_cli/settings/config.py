@@ -28,37 +28,40 @@ config_app = typer.Typer(help="Modify configuration for Airborn CLI")
 def show(
     all: bool = typer.Option(False, help="Show all configurations available"),
     general: bool = typer.Option(
-        False, help="Show general configuration options available"
+        False, help="Show available options for general configuration."
     ),
     ach: bool = typer.Option(
-        False, help="Show required ACH calculation options available."
+        False, help="Show available options to configure Required ACH calculations."
     ),
     ashrae: bool = typer.Option(
-        False, help="Show ASHRAE calculation options available."
+        False,
+        help="Show available options to configure the ASHRAE ventilation requirements.",
     ),
-    graphics: bool = typer.Option(False, help="Show graphics options available."),
+    graphics: bool = typer.Option(
+        False, help="Show available options to confgure graphic output."
+    ),
 ) -> None:
     """
     Shows current configurations.
     """
     console = Console()
 
-    if all == True:
+    if all is True:
         console.print(show_general())
         console.print(show_ach())
         console.print(show_ashrae())
         console.print(show_graphics())
     else:
-        if general == True:
+        if general is True:
             console.print(show_general())
 
-        if ach == True:
+        if ach is True:
             console.print(show_ach())
 
-        if ashrae == True:
+        if ashrae is True:
             console.print(show_ashrae())
 
-        if graphics == True:
+        if graphics is True:
             console.print(show_graphics())
 
 
@@ -66,27 +69,27 @@ def show(
 def general(
     ach: bool = typer.Option(
         settings["general"]["ach"],
-        help="Set whether run commands makes ach calculations with default values automatically or not.",
+        help="Make Required ACH calculations with default values.",
     ),
     ashrae: bool = typer.Option(
         settings["general"]["ashrae"],
-        help="Set whether run command makes ventilation calculation requirements according to ASHRAE recomendations with default values",
+        help="Make ASHRAE ventilation requirements calculation with default values.",
     ),
     graphics: bool = typer.Option(
         settings["general"]["graphics"],
-        help="Set whether to make graphics during analysis (Requires kaleido and plotly to be installed). Results are saved on the same directory as the data file. Can be changed in settings.",
+        help="Make graphics during analysis (Requires kaleido and plotly to be installed).",
     ),
     interactive: bool = typer.Option(
         settings["general"]["interactive"],
-        help="Sets whether the CLI is interactive or not.",
+        help="Toggle Interactive CLI",
     ),
     save_graphics: bool = typer.Option(
         settings["general"]["save_graphics"],
-        help="Set whether to save the graphics made or just show them during analysis",
+        help="Save the graphics made or just show them during analysis.",
     ),
     save: bool = typer.Option(
         settings["general"]["save"],
-        help="Set whether to save results to files for analysis",
+        help="Save results",
     ),
     save_format: SaveFormat = typer.Option(
         SaveFormat(settings["general"]["save_format"]),
@@ -99,7 +102,7 @@ def general(
     ),
 ) -> None:
     """
-    Set general defaults for run command.
+    Sets general defaults for `run` command.
     """
     settings = load_config()
 
@@ -121,11 +124,11 @@ def required_ach(
         settings["ach"]["max_risk"],
         min=0,
         max=100,
-        help="Set maximum risk for ACH calculations",
+        help="Set maximum risk for required ACH calculations",
     ),
     mask_default: MaskType = typer.Option(
         MaskType(settings["ach"]["mask_default"]),
-        help="Set mask type considered for occupants. Options: No mask, KN95, surgical, 3-ply cloth, 1-ply cloth, on_file",
+        help="Set mask type considered for occupants. Options: No mask, KN95, surgical, 3-ply cloth, 1-ply cloth, on_file.",
     ),
     inf_percent: List[int] = typer.Option(
         settings["ach"]["inf_percent"],
@@ -141,7 +144,7 @@ def required_ach(
     ),
 ) -> None:
     """
-    Sets configuration for ACH calculations.
+    Sets configuration for required ACH calculations.
     """
     settings = load_config()
 
@@ -163,7 +166,7 @@ def ashrae(
     rate_area: float = typer.Argument(..., help="Room rate according to ASHRAE 62.1"),
 ) -> None:
     """
-    Adds new room type for ASHRAE calculations
+    Adds new room type for ASHRAE ventilation requirements calculations.
     """
     settings = load_config()
 
@@ -179,7 +182,7 @@ def ashrae(
 def graphics(
     template: GraphicTemplate = typer.Option(
         GraphicTemplate(settings["graphics"]["template"]),
-        help="Sets default template for graphics",
+        help="Sets default template for graphics. Availabe options: 'ggplot2', 'seaborn', 'simple_white', 'plotly', 'plotly_white', 'plotly_dark', 'presentation', 'xgridoff', 'ygridoff', 'gridon', 'none'",
     ),
     color_scheme: List[str] = typer.Option(
         settings["graphics"]["color_scheme"], help="List of colors to use in graphics"
@@ -200,7 +203,7 @@ def graphics(
     ),
     scale: int = typer.Option(
         settings["graphics"]["scale"],
-        help="Scale for pictures, a higher number makes for better resolution, but it also increases image size",
+        help="Scale for pictures, a higher number makes for better resolution, but it also increases file size",
     ),
 ) -> None:
     """
