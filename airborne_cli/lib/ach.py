@@ -22,7 +22,7 @@ def infected_people(people: int, percent: float, infmin: int, toggle_inf: bool) 
     return infected
 
 
-def gaussian_distribution(n_people=10, permanence=120, t=0):
+def gaussian_distribution(n_people: int = 10, permanence: float = 120, t: float = 0):
     b = permanence / 2
     c = permanence / 6
     return n_people * exp(-((t - b) ** 2) / ((2 * c) ** 2))
@@ -240,7 +240,7 @@ def room_calculation(
         met_ref,
         1.3,
         3.8,
-    ]  #  metabolic rate based on activity, met
+    ]  # metabolic rate based on activity, met
 
     # Base value for inhalation rate
     inhRate_pure = 0.521  # ... inhalation rate, ltr/s,
@@ -259,9 +259,9 @@ def room_calculation(
     ]  # multiplier for inhalation rate based on activity.
 
     # Base value for exhalation rate
-    exhRate_pure = (
-        0.211  # ... exhlation rate for speaking from (Gupta et al., 2010), ltr/s
-    )
+    # exhRate_pure = (
+    # 0.211  # ... exhlation rate for speaking from (Gupta et al., 2010), ltr/s
+    # )
 
     # Activity multiplier applied to Ngen based on similar analysis with inhalation
     Activity_type_Ngen = [

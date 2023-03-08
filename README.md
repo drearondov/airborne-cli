@@ -5,7 +5,6 @@
 [![Status](https://img.shields.io/pypi/status/airborne-cli.svg?style=flat-square)][status]
 [![Python Version](https://img.shields.io/pypi/pyversions/airborne-cli?style=flat-square)][python version]
 [![License](https://img.shields.io/github/license/drearondov/airborne-cli?style=flat-square)][license]
-
 [![Read the documentation at https://airborne-cli.readthedocs.io/](https://img.shields.io/readthedocs/airborne-cli/latest.svg?label=Read%20the%20Docs&style=flat-square)][read the docs]
 [![Tests](https://github.com/drearondov/airborne-cli/workflows/Tests/badge.svg)][tests]
 [![Codecov](https://codecov.io/gh/drearondov/airborne-cli/branch/main/graph/badge.svg)][codecov]
@@ -26,11 +25,11 @@ A CLI utility to use the [airborne.cam](https://airborne.cam) app to process sev
 
 - Support to process data in a `.xlsx`, `.csv` or `.json` format
 - Fully configurable default mode for fast running
-- Exports graphics in `png` and `html`(comming soon) format for risk analysis.
+- Exports graphics in `png` and `html`(coming soon) format for risk analysis.
 
 ## Requirements
 
-To install and use the programm `Python 3.9` and over is required.
+To install and use the program `Python 3.9` and over is required.
 
 <!-- ## Installation
 
@@ -94,7 +93,8 @@ please [file an issue] along with a detailed description.
 
 ## Credits
 
-This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter] template.
+* This project is an extension of the wonderful work done by the [airborne.cam](https://airborne.cam) team.
+* This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter] template.
 
 [@cjolowicz]: https://github.com/cjolowicz
 [hypermodern python cookiecutter]: https://github.com/cjolowicz/cookiecutter-hypermodern-python

@@ -15,7 +15,7 @@ def graphics_config() -> None:
 
 
 def risk_ach_graph(data: pd.DataFrame, colors: list) -> dict[str, go.Figure]:
-    """Makes Risk vs ACH graphs for the data given.
+    """Makes Risk vs ACH graphs for the data given. Considers different percentages of occupancy
 
     Args:
         data (pd.DataFrame): Data for graph
@@ -138,7 +138,7 @@ def risk_ach_graph(data: pd.DataFrame, colors: list) -> dict[str, go.Figure]:
     return pabellon_figs
 
 
-def risk_flow_graph(data: pd.DataFrame, colors: list) -> dict:
+def risk_aerosol_graph(data: pd.DataFrame, colors: list) -> dict[str, go.Figure]:
     """Makes graph of Max risk vs. Flow Rate
 
     Args:

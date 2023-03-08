@@ -4,7 +4,7 @@ from typing import Optional
 import pandas as pd
 
 
-def load_data(data_in: Path) -> tuple[pd.DataFrame, Path] | None:
+def load_data(data_in: Path) -> tuple[pd.DataFrame, Path]:
     """Loads the data from the specified path
 
     Args:
@@ -32,9 +32,7 @@ def load_data(data_in: Path) -> tuple[pd.DataFrame, Path] | None:
     if check_data(data.columns):
         return (data, data_folder)
     else:
-        raise ValueError(
-            "Check that input data contains all the required columns"
-        )
+        raise ValueError("Check that input data contains all the required columns")
 
 
 def check_data(data_columns: pd.Index) -> bool:
@@ -49,9 +47,7 @@ def check_data(data_columns: pd.Index) -> bool:
 
 
 def save_data(
-        data_folder: Path,
-        save_format: str,
-        data_to_save: dict[str, pd.DataFrame]
+    data_folder: Path, save_format: str, data_to_save: dict[str, pd.DataFrame]
 ) -> Path:
     """Saves data results to folder in format specified.
 

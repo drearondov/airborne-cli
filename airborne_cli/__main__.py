@@ -53,7 +53,7 @@ def run(
         settings["general"]["save_graphics"],
         help="Save the graphics made. If `false`, program wil just show them during analysis",
     ),
-    save: bool = typer.Option(
+    save_results: bool = typer.Option(
         settings["general"]["save"], help="Save results to files for analysis"
     ),
     save_format: SaveFormat = typer.Option(
@@ -89,7 +89,7 @@ def run(
                     set_risk=settings["general"]["max_risk"] / 100,
                     mask_type=int(mask_type.name[-1]),
                     inf_percent=inf_percent,
-                    viral_load=viral_load.value,
+                    viral_load=int(viral_load.value),
                     cutoff_type=int(aerosol.name[-1]),
                 ),
                 axis=1,
@@ -103,7 +103,7 @@ def run(
 
     if risk:
         risk_ach_data = ach_risk_calculation(data, settings["ach"]["inf_percent"])
-        risk_aerosol_data = aerosol_risk_calculation(data)
+        risk_aerosol_data = aerosol_risk_calculation(data, settings["ach"]["aerosol"])
 
         results_data["risk-ach"] = risk_ach_data
         results_data["risk-aersol"] = risk_aerosol_data
@@ -112,14 +112,20 @@ def run(
             risk_ach_graphics = risk_ach_graph(
                 risk_ach_data, settings["graphics"]["color_scheme"]
             )
+        else:
+            save_graphics = False
 
-    if save:
+    if save_results:
         results_folder = save_data(data_folder, save_format.value, results_data)
 
-        if save_graphics:
-            graphics_output(
-                results_folder, risk_ach_graphics
-            )  # FIXME: Create a dict for results, to allow different results
+    if save_graphics:
+        if not save_results:
+            results_folder = data_folder.joinpath("results")
+            results_folder.mkdir()
+
+        graphics_output(
+            results_folder, risk_ach_graphics
+        )  # FIXME: Create a dict for results, to allow different results
 
 
 @app.command()
@@ -194,14 +200,14 @@ def required_ach(
                 if mask_type != MaskType.i5
                 else x["Mask Type"],
                 inf_percent=percent,
-                viral_load=viral_load.value,
+                viral_load=int(viral_load.value),
                 cutoff_type=int(aerosol.name[-1]),
             ),
             axis=1,
         )
 
     if save:
-        _ = save_data(data, data_folder, save_format.value)
+        _ = save_data(data_folder, save_format.value, data)
 
 
 @app.command()
@@ -237,7 +243,7 @@ def ashrae(
         data = ashrae_calculation(data, occupancy, settings["ashrae"])
 
     if save:
-        _ = save_data(data, data_folder, save_format.value)
+        _ = save_data(data_folder, save_format.value, data)
 
 
 @app.command()
@@ -275,11 +281,13 @@ def risk_analysis(
         risk_ach_graphics = risk_ach_graph(
             risk_ach_data, settings["graphics"]["color_scheme"]
         )
+    else:
+        save_graphics = False
 
     if save:
-        results_folder = save_data(data, data_folder, save_format.value)
+        results_folder = save_data(data_folder, save_format.value, data)
         if save_graphics:
-            save_graphics(
+            graphics_output(
                 results_folder, risk_ach_graphics
             )  # FIXME: Create a dict for results, to allow different results
 
@@ -291,3 +299,8 @@ def risk_analysis(
 #     """
 #     Fires up a dashboard for analysis.
 #     """
+
+
+@app.command()
+def make_graphics(data_in: Path = typer.Argument(..., exists=True)) -> None:
+    pass

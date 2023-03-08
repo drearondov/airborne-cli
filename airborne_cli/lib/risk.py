@@ -6,7 +6,7 @@ import pandas as pd
 from airborne_cli.lib.ach import room_calculation
 
 
-def ach_risk_calculation(data: pd.DataFrame, inf_percent: list) -> pd.DataFrame:
+def ach_risk_calculation(data: pd.DataFrame, inf_percent: list[float]) -> pd.DataFrame:
     """Calculates the variation in risk at different ACH values for different rates of infection.
 
     Args:
@@ -42,9 +42,7 @@ def ach_risk_calculation(data: pd.DataFrame, inf_percent: list) -> pd.DataFrame:
         results[f"riesgo_100_{infected}_inf"] = []
 
     for ambiente in data.itertuples(index=False, name="Ambiente"):
-
         for ach in ach_list:
-
             results["ambiente"].append(ambiente.Ambiente)
             results["pabellon"].append(ambiente.Pabellon)
             results["ach"].append(ach)
@@ -52,7 +50,6 @@ def ach_risk_calculation(data: pd.DataFrame, inf_percent: list) -> pd.DataFrame:
             results["ach_natural"].append(ambiente.ACH_natural)
 
             for infected in inf_percent:
-
                 results["infected"].append(inf_percent)
 
                 (_, R, _, _, _, _, _) = room_calculation(
@@ -148,7 +145,9 @@ def ach_risk_calculation(data: pd.DataFrame, inf_percent: list) -> pd.DataFrame:
     return results_df
 
 
-def aerosol_risk_calculation(data: pd.DataFrame, aerosol_cutoff: list) -> pd.DataFrame:
+def aerosol_risk_calculation(
+    data: pd.DataFrame, aerosol_cutoff: list[int]
+) -> pd.DataFrame:
     """Maximum risk for different flow rates at different aerosol cuttoff.
 
     Args:
@@ -164,21 +163,16 @@ def aerosol_risk_calculation(data: pd.DataFrame, aerosol_cutoff: list) -> pd.Dat
         "volumen": [],
         "pabellon": [],
         "ach": [],
-        "riesgo_20_um": [],
-        "riesgo_40_um": [],
     }
 
     for ambiente in data.itertuples(index=False, name="Ambiente"):
-
         for ach in ach_list:
-
             results["ambiente"].append(ambiente.Ambiente)
             results["pabellon"].append(ambiente.Pabellon)
             results["volumen"].append(ambiente.Volumen)
             results["ach"].append(ach)
 
             for cutoff in aerosol_cutoff:
-
                 (_, R, _, _, _, _, _) = room_calculation(
                     Ar=ambiente.Area,
                     Hr=ambiente.Altura,
