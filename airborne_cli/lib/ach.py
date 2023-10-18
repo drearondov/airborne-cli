@@ -458,7 +458,7 @@ def ach_required(
     cutoff_type: int = 3,
 ) -> float:
     """Función que calcula los ACH necesarios para llegar a un riesgo máximo de 3% +- 0.05.
-        Retorna tanto los ACH como el riesgo máximo
+        Retorna tanto las ACH como el riesgo máximo
 
     Args:
         area (float): area del ambiente
@@ -469,7 +469,7 @@ def ach_required(
         set_risk (float): riesgo máximo determinado
 
     Returns:
-        List: lista con el ACH obtenido y el riesgo máximo
+        List: Lista con las ACH obtenidas y el riesgo máximo
     """
     max_risk = 1
     ACH_custom = 0
@@ -499,8 +499,8 @@ def ach_required(
 def risk_calculation(
     area: float, altura: float, aforo: int, actividad: int, permanencia: int
 ) -> float:
-    """Función que calcula los ACH necesarios para llegar a un riesgo máximo de 3% +- 0.05.
-        Retorna tanto los ACH como el riesgo máximo
+    """Función que calcula las ACH necesarias para llegar a un riesgo máximo de 3% +- 0.05.
+        Retorna tanto las ACH como el riesgo máximo
 
     Args:
         area (float): area del ambiente

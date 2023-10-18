@@ -8,7 +8,7 @@
 **** TODO Write settings tests
 **** TODO Write backend tests
 *** TODO Documentation
-**** TODO Write documentation strings for CLI
+**** DONE Write documentation strings for CLI
 **** TODO Use MkDocs to compile documentation
 **** TODO Use Diataxis method for compiling documentation
 *** DONE Source Code
@@ -30,3 +30,4 @@
 
 * LOG:
 - I think I'm going to remove the auto graphs function and create a separate command. I need to check what calculations and information is required to make the graphs.
+- Already fixed the graphs and I'm ready to start testing and writing the documentation.

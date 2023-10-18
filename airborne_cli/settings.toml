@@ -25,6 +25,10 @@ taller = { rate_people = 5, rate_area = 0.9 }
 laboratorio = { rate_people = 5, rate_area = 0.9 }
 laboratorio_computacion = { rate_people = 5, rate_area = 0.6 }
 
+[risk]
+risk_inf = true
+risk_aerosol = true
+
 [graphics]
 template = "plotly_white"
 color_scheme = [

@@ -19,7 +19,8 @@
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
 
-A CLI utility to use the [airborne.cam](https://airborne.cam) app to process several rooms at once, under multiple conditions from an input file size.
+A CLI utility to use the [airborne.cam] app to process several rooms at once,
+under multiple conditions from an input file size.
 
 ## Features
 
@@ -29,18 +30,21 @@ A CLI utility to use the [airborne.cam](https://airborne.cam) app to process sev
 
 ## Requirements
 
-To install and use the program `Python 3.9` and over is required.
+To install and use the program `Python >= 3.10` is required.
 
-<!-- ## Installation
+## Instal
 
-> Note: This package is still under development, and as such it has not been published to [PyPI]. Also, because of the nature of the package I haven't decided if it'll ever be.
+> Note: This package is still under development, and as such it has not been
+published to [PyPI]. Also, because of the nature of the package I haven't
+decided if it'll ever be.
 
 ### Package instalation
 
-If you still would like to use this tools, you can get the latest version of _Airborne CLI_ following this steps.
+If you still would like to use this tools, you can get the latest version of
+_Airborne CLI_ following this steps.
 
 ```bash
-repo='https://github.com/drearondov/airborne-cli)'
+repo='https://github.com/drearondov/airborne-cli'
 
 # Find the latest release.
 latest=$(git ls-remote --tags --refs $repo | # Fetch remote tags.
@@ -61,16 +65,17 @@ pip install $release
 
 To build the package straight from source, there are two requirements.
 
-1. Python 3.9 and higher
+1. Python 3.10 and higher
 2. Poetry package manager
 
-With that, you can clone or download the repo into you machine, and use _Poetry_ to install.
+With that, you can clone or download the repo into you machine, and use
+_Poetry_ to install.
 
 ```bash
 git clone https://github.com/drearondov/airborne-cli.git
 cd airborne-cli
 poetry install
-``` -->
+```
 
 ## Usage
 
@@ -93,17 +98,19 @@ please [file an issue] along with a detailed description.
 
 ## Credits
 
-* This project is an extension of the wonderful work done by the [airborne.cam](https://airborne.cam) team.
-* This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter] template.
+- This project is an extension of the wonderful work done by the
+[airborne.cam] team.
+- This project was generated from [@cjolowicz]'s
+[Hypermodern Python Cookiecutter] template.
 
 [@cjolowicz]: https://github.com/cjolowicz
 [hypermodern python cookiecutter]: https://github.com/cjolowicz/cookiecutter-hypermodern-python
 [file an issue]: https://github.com/drearondov/airborne-cli/issues
-[pip]: https://pip.pypa.io/
 [pypi]: https://pypi.org
+[airborne.cam]: https://airborne.cam
 
 <!-- github-only -->
 
-[license]: https://github.com/drearondov/airborne-cli/blob/main/LICENSE
+[license]: https://github.com/drearondov/airborne-cli/blob/master/LICENSE
 [contributor guide]: https://github.com/drearondov/airborne-cli/blob/main/CONTRIBUTING.md
 [command-line reference]: https://airborne-cli.readthedocs.io/en/latest/usage.html

@@ -112,7 +112,7 @@ def show_general() -> Panel:
     table = Table(show_header=False, box=None)
 
     for key, value in settings["general"].items():
-        if type(value) != list:
+        if type(value) is list:
             table.add_row(key, f"{value}")
         else:
             table.add_row(key, f"{list(value)}")
@@ -167,7 +167,7 @@ def show_graphics() -> Panel:
     table = Table(show_header=False, box=None)
 
     for key, value in settings["graphics"].items():
-        if type(value) != list:
+        if type(value) is list:
             table.add_row(key, f"{value}")
         else:
             table.add_row(key, f"{list(value)}")

@@ -11,7 +11,7 @@ from datetime import datetime
 project = "Airborne CLI"
 author = "Andrea Rondon"
 copyright = f"{datetime.now().year}, {author}"
-release = "0.1.0"
+release = "1.0.0a0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

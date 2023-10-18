@@ -1,3 +1,4 @@
+# Python related files
 .mypy_cache/
 /.coverage
 /.coverage.*
@@ -9,7 +10,11 @@
 /src/*.egg-info/
 __pycache__/
 
-# Ignore dynaconf secret files
+# Confoguration files & folders
+.DS_Store
+/.vscode/*
+
+# Dynaconf secret files
 .secrets.*
-.todo
+todo.org
 result.prof

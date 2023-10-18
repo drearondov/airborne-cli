@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "airborne-cli"
-version = "0.1.0"
+version = "1.0.0a0"
 description = "A set of tools used to asess the ventilation quality of a room and the risk of infection"
 authors = ["drearondov <63360808+drearondov@users.noreply.github.com>"]
 license = "GPL-3.0"
@@ -13,15 +13,17 @@ classifiers = ["Development Status :: 2 - Pre-Alpha"]
 [tool.poetry.urls]
 Changelog = "https://github.com/drearondov/airborne-cli/releases"
 
+[tool.poetry.scripts]
+airborne = "airborne_cli.__main__:app"
+
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0.0"
+python = ">=3.10,<4.0.0"
 typer = ">=0.6.1"
 numpy = ">=1.23.1"
 pandas = ">=1.4.3"
 plotly = ">=5.10.0"
 kaleido = "0.2.1"
 openpyxl = ">=3.0.10"
-dash = ">=2.6.1"
 rich = ">=12.5.1"
 dynaconf = ">=3.1.9"
 PyInquirer = ">=1.0.3"
@@ -31,6 +33,7 @@ Pygments = ">=2.10.0"
 black = ">=22.6.0"
 coverage = { extras = ["toml"], version = ">=6.4" }
 darglint = ">=1.8.1"
+faker = "^17.6.0"
 flake8 = ">=4.0.1"
 flake8-bandit = ">=2.1.2"
 flake8-bugbear = ">=21.9.2"
@@ -63,9 +66,6 @@ sphinx = "^6.1.3"
 sphinx-autobuild = "^2021.3.14"
 sphinx-click = "^4.4.0"
 sphinx-book-theme = "^1.0.0"
-
-[tool.poetry.scripts]
-airborne = "airborne_cli.__main__:app"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
