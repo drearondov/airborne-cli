@@ -1,3 +1,7 @@
+"""
+Module tha hold the import and exprt functions for the configuration app.
+"""
+
 import tomlkit
 
 from rich import print
@@ -89,7 +93,7 @@ def generate_config() -> tomlkit.TOMLDocument:
     return config
 
 
-def save_config(config: tomlkit.TOMLDocument | dict) -> None:
+def save_config(config: tomlkit.TOMLDocument) -> None:
     """Saves new configuration file.
 
     Args:
@@ -115,7 +119,7 @@ def show_general() -> Panel:
         if type(value) is list:
             table.add_row(key, f"{value}")
         else:
-            table.add_row(key, f"{list(value)}")
+            table.add_row(key, f"{value}")
 
     return Panel(table, title="General", style="green", width=80)
 
@@ -170,5 +174,5 @@ def show_graphics() -> Panel:
         if type(value) is list:
             table.add_row(key, f"{value}")
         else:
-            table.add_row(key, f"{list(value)}")
+            table.add_row(key, f"{value}")
     return Panel(table, title="Graphics", style="magenta", width=80)

@@ -1,4 +1,5 @@
 from pathlib import Path
+from numpy import dtype
 
 import pandas as pd
 import plotly.graph_objects as go
@@ -26,24 +27,40 @@ def load_data(data_in: Path) -> tuple[pd.DataFrame, Path]:
             data = pd.read_json(data_path)
         case _:
             raise ValueError(
-                "Format not supported, only .xlsx, .csv and .json are supported"
+                f"[bold red]Alesrt![/bold red]Format {data_format} not supported. Only .xlsx, .csv and .json are supported"
             )
 
-    if check_data(data.columns):
+    if check_data(data):
         return (data, data_folder)
-    else:
-        raise ValueError("Check that input data contains all the required columns")
 
 
-def check_data(data_columns: pd.Index) -> bool:
+def check_data(data_frame: pd.DataFrame) -> bool:
     """Checks if the Data Frame entered has the appropriate columns and data types.
 
     Args:
         data (pd.DataFrame): Data frame entered
     """
-    required_columns = ["area", "altura", "aforo", "actividad", "permanencia"]
+    required_columns = {
+        "ambiente": dtype("object"),
+        "area": dtype("float64"),
+        "altura": dtype("float64"),
+        "aforo_100": dtype("int64"),
+        "actividad": dtype("int64"),
+        "permanencia": dtype("float64"),
+    }
 
-    return all(parameter in data_columns for parameter in required_columns)
+    for column_name, column_type in required_columns.items():
+        if column_name in data_frame.columns:
+            if column_type != data_frame[column_name].dtype:
+                raise ValueError(
+                    f"[bold red]Alert![/bold red] Column {column_name} is not the correct type {column_type}"
+                )
+        else:
+            raise ValueError(
+                f"[bold red]Alert![/bold red] Column {column_name} not found. Is a required column"
+            )
+
+    return True
 
 
 def make_results_folder(data_folder: Path) -> Path:
@@ -72,14 +89,15 @@ def save_data(
         data_to_save(dict[str, pd.DataFrame]): Names and pd.DataFrame to save
     """
 
-    if save_format == "csv":
-        for name, df in data_to_save.items():
-            df.to_csv(results_folder.joinpath(f"{name}.csv"))
-    elif save_format == "xlsx":
-        for name, df in data_to_save.items():
-            df.to_excel(results_folder.joinpath(f"{name}.xlsx"))
-    else:
-        raise ValueError("[bold red]Alert![/bold red] Extension not supported")
+    match save_format:
+        case "csv":
+            for name, df in data_to_save.items():
+                df.to_csv(results_folder.joinpath(f"{name}.csv"))
+        case "xlsx":
+            for name, df in data_to_save.items():
+                df.to_excel(results_folder.joinpath(f"{name}.xlsx"))
+        case _:
+            raise ValueError("[bold red]Alert![/bold red] Extension not supported")
 
 
 def graphics_output(
@@ -94,13 +112,14 @@ def graphics_output(
         aerosol_risk_graphics (dict): Dictionary where aerosol graphics are stored
     """
     for graphics_group, graphics_dict in graphics.items():
-        if graphics_group == "risk_ach_inf_graphics":
-            graph_path = results_folder.joinpath("risk_ach_inf")
-            graph_path.mkdir()
+        match graphics_group:
+            case "risk_ach_inf_graphics":
+                graph_path = results_folder.joinpath("risk_ach_inf")
+                graph_path.mkdir()
 
-        if "risk_ach_aerosol_graphics" in graphics.keys():
-            graph_path = results_folder.joinpath("risk_ach_aerosol")
-            graph_path.mkdir()
+            case "risk_ach_aerosol_graphics":
+                graph_path = results_folder.joinpath("risk_ach_aerosol")
+                graph_path.mkdir()
 
         for name, figure in graphics_dict.items():
             figure.write_image(graph_path.joinpath(f"{name}.png"))

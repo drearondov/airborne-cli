@@ -92,9 +92,17 @@ During data processing, there are three main aspects being calculated:
 
 ## Results
 
-There are three major results that can be obtained:
+This are the results that can be obtained using this CLI.
 
-- 
+- On the input file:
+  - ACH required for different occupancies and percentage of infected
+  - Required airflow according to ASHRAE 62.1 recomendation
+- On a risk folder:
+  - Risk per infected percentage for 30%, 40%, 50%, 70%, 90% and 100% occupancy
+  - Risk per aerosol cutoff percentage for 30%, 40%, 50%, 70%, 90% and 100% occupancy
+- On a graphics folder:
+  - Risk vs. ACH for different percentages of occupancy and infected percentage
+  - Risk vs. ACH for different percentages of occupancy and aerosol cutoff
 
 [Poetry]: https://python-poetry.org
 [Airborne CLI]: https://github.com/drearondov/airborne-cli

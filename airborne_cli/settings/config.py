@@ -1,3 +1,6 @@
+"""CLI module for config, hold the CLI commands as well as the logic for showing and updating the configuration file.
+"""
+
 import typer
 
 from rich.console import Console
@@ -26,28 +29,28 @@ config_app = typer.Typer(help="Modify configuration for Airborne CLI")
 
 @config_app.command()
 def show(
-    all: Annotated[bool, typer.Option(False, help="Show all configurations available")],
+    all: Annotated[
+        bool, typer.Option(help="Show all configurations available")
+    ] = False,
     general: Annotated[
-        bool,
-        typer.Option(False, help="Show available options for general configuration."),
-    ],
+        bool, typer.Option(help="Show available options for general configuration.")
+    ] = False,
     ach: Annotated[
         bool,
         typer.Option(
-            False, help="Show available options to configure Required ACH calculations."
+            help="Show available options to configure Required ACH calculations."
         ),
-    ],
+    ] = False,
     ashrae: Annotated[
         bool,
         typer.Option(
-            False,
             help="Show available options to configure the ASHRAE ventilation requirements.",
         ),
-    ],
+    ] = False,
     graphics: Annotated[
         bool,
-        typer.Option(False, help="Show available options to confgure graphic output."),
-    ],
+        typer.Option(help="Show available options to confgure graphic output."),
+    ] = False,
 ) -> None:
     """
     Shows current configurations.
@@ -78,60 +81,54 @@ def general(
     ach: Annotated[
         bool,
         typer.Option(
-            settings["general"]["ach"],
             help="Make Required ACH calculations with default values.",
         ),
-    ],
+    ] = settings["general"]["ach"],
     ashrae: Annotated[
         bool,
         typer.Option(
-            settings["general"]["ashrae"],
             help="Make ASHRAE ventilation requirements calculation with default values.",
         ),
-    ],
+    ] = settings["general"]["ashrae"],
     graphics: Annotated[
         bool,
         typer.Option(
-            settings["general"]["graphics"],
             help="Make graphics during analysis (Requires kaleido and plotly to be installed).",
         ),
-    ],
+    ] = settings["general"]["graphics"],
     interactive: Annotated[
         bool,
         typer.Option(
-            settings["general"]["interactive"],
             help="Toggle Interactive CLI",
         ),
-    ],
+    ] = settings["general"]["interactive"],
     save_graphics: Annotated[
         bool,
         typer.Option(
-            settings["general"]["save_graphics"],
             help="Save the graphics made or just show them during analysis.",
         ),
-    ],
+    ] = settings["general"]["save_graphics"],
     save: Annotated[
         bool,
         typer.Option(
-            settings["general"]["save"],
             help="Save results",
         ),
-    ],
+    ] = settings[
+        "general"
+    ]["save"],
     save_format: Annotated[
         SaveFormat,
         typer.Option(
-            SaveFormat(settings["general"]["save_format"]),
             case_sensitive=False,
             help="Set the default format for saving calculation results. Currently supperted: csv and xlsx",
         ),
-    ],
+    ] = SaveFormat(settings["general"]["save_format"]),
     aforo: Annotated[
         list[float],
         typer.Option(
-            settings["general"]["aforo"],
             help="Set default percentages to calculate occupancy",
         ),
-    ],
+    ] = settings["general"]["aforo"],
 ) -> None:
     """
     Sets general defaults for `run` command.
@@ -155,40 +152,35 @@ def required_ach(
     max_risk: Annotated[
         float,
         typer.Option(
-            settings["ach"]["max_risk"],
             min=0,
             max=100,
             help="Set maximum risk for required ACH calculations",
         ),
-    ],
+    ] = settings["ach"]["max_risk"],
     mask_default: Annotated[
         MaskType,
         typer.Option(
-            MaskType(settings["ach"]["mask_default"]),
             help="Set mask type considered for occupants. Options: No mask, KN95, surgical, 3-ply cloth, 1-ply cloth, on_file.",
         ),
-    ],
+    ] = MaskType(settings["ach"]["mask_default"]),
     inf_percent: Annotated[
         list[int],
         typer.Option(
-            settings["ach"]["inf_percent"],
             help="Percentages of infected people to evaluate",
         ),
-    ],
+    ] = settings["ach"]["inf_percent"],
     viral_load: Annotated[
         ViralLoad,
         typer.Option(
-            ViralLoad(settings["ach"]["viral_load"]),
             help="Viral load considered. Options: 8, 9, 10",
         ),
-    ],
+    ] = ViralLoad(settings["ach"]["viral_load"]),
     aerosol: Annotated[
         AerosolCutoff,
         typer.Option(
-            AerosolCutoff(settings["general"]["default_aerosol"]),
             help="Maximum size of particles considered aerosol",
         ),
-    ],
+    ] = AerosolCutoff(settings["general"]["default_aerosol"]),
 ) -> None:
     """
     Sets configuration for required ACH calculations.
@@ -206,14 +198,12 @@ def required_ach(
 
 @config_app.command()
 def ashrae(
-    key_name: Annotated[
-        str, typer.Argument(..., help="Name of the new room type to add")
-    ],
+    key_name: Annotated[str, typer.Argument(help="Name of the new room type to add")],
     rate_people: Annotated[
-        float, typer.Argument(..., help="People rate according to ASHRAE 62.1")
+        float, typer.Argument(help="People rate according to ASHRAE 62.1")
     ],
     rate_area: Annotated[
-        float, typer.Argument(..., help="Room rate according to ASHRAE 62.1")
+        float, typer.Argument(help="Room rate according to ASHRAE 62.1")
     ],
 ) -> None:
     """
@@ -234,47 +224,41 @@ def graphics(
     template: Annotated[
         GraphicTemplate,
         typer.Option(
-            GraphicTemplate(settings["graphics"]["template"]),
             help="Sets default template for graphics. Availabe options: 'ggplot2', 'seaborn', 'simple_white', 'plotly', 'plotly_white', 'plotly_dark', 'presentation', 'xgridoff', 'ygridoff', 'gridon', 'none'",
         ),
-    ],
+    ] = GraphicTemplate(settings["graphics"]["template"]),
     color_scheme: Annotated[
         list[str],
         typer.Option(
-            settings["graphics"]["color_scheme"],
             help="List of colors to use in graphics",
         ),
-    ],
+    ] = settings["graphics"]["color_scheme"],
     format: Annotated[
         GraphicFormat,
         typer.Option(
-            GraphicFormat(settings["graphics"]["format"]),
             help="Default graphics format to save images in.",
         ),
-    ],
+    ] = GraphicFormat(settings["graphics"]["format"]),
     default_width: Annotated[
         int,
         typer.Option(
-            settings["graphics"]["default_width"],
             min=0,
             help="Default width for images (in pixels)",
         ),
-    ],
+    ] = settings["graphics"]["default_width"],
     default_height: Annotated[
         int,
         typer.Option(
-            settings["graphics"]["default_height"],
             min=0,
             help="Default height for images (in pixels)",
         ),
-    ],
+    ] = settings["graphics"]["default_height"],
     scale: Annotated[
         int,
         typer.Option(
-            settings["graphics"]["scale"],
             help="Scale for pictures, a higher number makes for better resolution, but it also increases file size",
         ),
-    ],
+    ] = settings["graphics"]["scale"],
 ) -> None:
     """
     Set graphic defaults.

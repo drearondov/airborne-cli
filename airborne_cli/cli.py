@@ -7,7 +7,10 @@ import typer
 
 from .lib.ach import ach_required
 from .lib.ashrae import ashrae_calculation
-from .lib.graphics import risk_ach_graph, risk_aerosol_graph
+from .lib.graphics import (
+    risk_ach_aerosol_graph,
+    risk_ach_inf_graph,
+)
 from .lib.risk import ach_risk_inf_percent_calculation, ach_risk_aerosol_calculation
 from .settings.config import config_app, settings
 from .utils.io import graphics_output, load_data, save_data, make_results_folder
@@ -15,7 +18,8 @@ from .utils.options import AerosolCutoff, MaskType, SaveFormat, ViralLoad
 
 
 app = typer.Typer(
-    help="CLI interface for Air Quality analysis and Air Changes per Hour required for multiple indoor areas"
+    help="CLI interface for Air Quality analysis and Air Changes per Hour required for multiple indoor areas",
+    pretty_exceptions_short=False,
 )
 app.add_typer(config_app, name="config")
 
@@ -25,7 +29,6 @@ def run(
     data_in: Annotated[
         Path,
         typer.Argument(
-            ...,
             exists=True,
             help="Filepath where the data for analysis is stored. To know the required fields for the data and the supported file formats read the docs",
         ),
@@ -33,52 +36,44 @@ def run(
     ach: Annotated[
         bool,
         typer.Option(
-            settings["general"]["ach"],
             help="Calculate Required ACH calculations with default values",
         ),
-    ],
+    ] = settings["general"]["ach"],
     ashrae: Annotated[
         bool,
         typer.Option(
-            settings["general"]["ashrae"],
             help="Calculate Room Ventilation Requirements according to ASHRAE recomendations with default values",
         ),
-    ],
+    ] = settings["general"]["ashrae"],
     risk: Annotated[
         bool,
         typer.Option(
-            settings["general"]["risk"],
             help="Perform risk analysis for different conditions",
         ),
-    ],
+    ] = settings["general"]["risk"],
     graphics: Annotated[
         bool,
         typer.Option(
-            settings["general"]["graphics"],
             help="Make graphics during analysis (Requires kaleido and plotly to be installed)",
         ),
-    ],
+    ] = settings["general"]["graphics"],
     save_graphics: Annotated[
         bool,
         typer.Option(
-            settings["general"]["save_graphics"],
             help="Save the graphics made. If `false`, program wil just show them during analysis",
         ),
-    ],
+    ] = settings["general"]["save_graphics"],
     save_results: Annotated[
         bool,
-        typer.Option(
-            settings["general"]["save"], help="Save results to files for analysis"
-        ),
-    ],
+        typer.Option(help="Save results to files for analysis"),
+    ] = settings["general"]["save"],
     save_format: Annotated[
         SaveFormat,
         typer.Option(
-            SaveFormat(settings["general"]["save_format"]),
             case_sensitive=False,
             help="Format for saving calculation results. Currently supperted: .csv and .xlsx",
         ),
-    ],
+    ] = SaveFormat(settings["general"]["save_format"]),
 ) -> None:
     """
     Shortcut function to run calculation with default values.
@@ -87,6 +82,7 @@ def run(
     """
     # Setup input and output
     (data, data_folder) = load_data(data_in)
+
     if save_results or save_graphics:
         results_folder = make_results_folder(data_folder)
 
@@ -141,17 +137,21 @@ def run(
         graphic_results = {}
 
         if settings["risk"]["risk_inf"]:
-            graphic_results["risk_ach_inf_graphics"] = risk_ach_graph(
+            graphic_results["risk_ach_inf_graphics"] = risk_ach_inf_graph(
                 results_data["risk_ach_inf_data"], settings["graphics"]["color_scheme"]
             )
         if settings["risk"]["risk_aerosol"]:
-            graphic_results["risk_ach_aerosol_graphics"] = risk_aerosol_graph(
+            graphic_results["risk_ach_aerosol_graphics"] = risk_ach_aerosol_graph(
                 results_data["risk_ach_aerosol_data"],
                 settings["graphics"]["color_scheme"],
             )
 
         if save_graphics:
             graphics_output(results_folder, graphic_results)
+        else:
+            for graphic_group in graphic_results:
+                for graph in graphic_group.values():
+                    graph.show()
 
     # Saving data
     if save_results:
@@ -163,7 +163,6 @@ def required_ach(
     data_in: Annotated[
         Path,
         typer.Argument(
-            ...,
             exists=True,
             help="Filepath where the data for analysis is stored. To know the required fields for the data, read the docs.",
         ),
@@ -171,59 +170,49 @@ def required_ach(
     max_risk: Annotated[
         float,
         typer.Option(
-            settings["ach"]["max_risk"],
             min=0,
             max=100,
             help="Maximum risk acceptable for calculation",
         ),
-    ],
+    ] = settings["ach"]["max_risk"],
     mask_type: Annotated[
         MaskType,
         typer.Option(
-            MaskType(settings["ach"]["mask_default"]),
             help="Mask type considered for occupants. Options: No mask, KN95, surgical, 3-ply cloth, 1-ply cloth, on_file",
         ),
-    ],
+    ] = MaskType(settings["ach"]["mask_default"]),
     inf_percent: Annotated[
         list[float],
         typer.Option(
-            settings["ach"]["inf_percent"],
             help="Percentages of infected people to evaluate",
         ),
-    ],
+    ] = settings["ach"]["inf_percent"],
     viral_load: Annotated[
         ViralLoad,
         typer.Option(
-            ViralLoad(settings["ach"]["viral_load"]),
             help="Viral load considered. Options: 8, 9, 10",
         ),
-    ],
+    ] = ViralLoad(settings["ach"]["viral_load"]),
     aerosol: Annotated[
         AerosolCutoff,
         typer.Option(
-            AerosolCutoff(settings["general"]["default_aerosol"]),
             help="Maximum size of particles considered aerosol",
         ),
-    ],
+    ] = AerosolCutoff(settings["general"]["default_aerosol"]),
     aforo: Annotated[
         list[float],
-        typer.Option(
-            settings["general"]["aforo"], help="Percentages to calculate occupancy"
-        ),
-    ],
+        typer.Option(help="Percentages to calculate occupancy"),
+    ] = settings["general"]["aforo"],
     save: Annotated[
         bool,
-        typer.Option(
-            settings["general"]["save"], help="Save results to files for analysis"
-        ),
-    ],
+        typer.Option(help="Save results to files for analysis"),
+    ] = settings["general"]["save"],
     save_format: Annotated[
         SaveFormat,
         typer.Option(
-            SaveFormat(settings["general"]["save_format"]),
             help="Format for saving calculation results. Currently supperted: csv and xlsx",
         ),
-    ],
+    ] = SaveFormat(settings["general"]["save_format"]),
 ) -> None:
     """
     Make Required ACH calculations with custom parameters.
@@ -273,30 +262,23 @@ def ashrae(
     data_in: Annotated[
         Path,
         typer.Argument(
-            ...,
             exists=True,
             help="Filepath where the data for analysis is stored. To know the required fields for the data, read the docs.",
         ),
     ],
     aforo: Annotated[
-        list[float],
-        typer.Option(
-            settings["general"]["aforo"], help="Percentages to calculate occupancy"
-        ),
-    ],
+        list[float], typer.Option(help="Percentages to calculate occupancy")
+    ] = settings["general"]["aforo"],
     save: Annotated[
         bool,
-        typer.Option(
-            settings["general"]["save"], help="Save results to files for analysis"
-        ),
-    ],
+        typer.Option(help="Save results to files for analysis"),
+    ] = settings["general"]["save"],
     save_format: Annotated[
         SaveFormat,
         typer.Option(
-            SaveFormat(settings["general"]["save_format"]),
             help="Format for saving calculation results. Currently supperted: csv and xlsx",
         ),
-    ],
+    ] = SaveFormat(settings["general"]["save_format"]),
 ) -> None:
     """
     Makes recommended flow calculations for analysis according to ASHRAE recomendations with custom parameters.
@@ -322,7 +304,6 @@ def risk_analysis(
     data_in: Annotated[
         Path,
         typer.Argument(
-            ...,
             exists=True,
             help="Filepath where the data for analysis is stored. To know the required fields for the data, read the docs.",
         ),
@@ -330,44 +311,37 @@ def risk_analysis(
     risk_inf: Annotated[
         bool,
         typer.Option(
-            settings["risk"]["risk_inf"],
             help="Make risk calculations for differente percentage of infected people",
         ),
-    ],
+    ] = settings["risk"]["risk_inf"],
     risk_aerosol: Annotated[
         bool,
         typer.Option(
-            settings["risk"]["risk_aerosol"],
             help="Make risk calculations for different aerosol cutoff values",
         ),
-    ],
+    ] = settings["risk"]["risk_aerosol"],
     graphics: Annotated[
         bool,
         typer.Option(
-            settings["general"]["graphics"],
             help="Make graphics during analysis (Requires kaleido and plotly to be installed). Results are saved on the same directory as the data file. Can be changed in settings.",
         ),
-    ],
+    ] = settings["general"]["graphics"],
     save_graphics: Annotated[
         bool,
         typer.Option(
-            settings["general"]["save_graphics"],
             help="Save the graphics made or just show them during analysis",
         ),
-    ],
+    ] = settings["general"]["save_graphics"],
     save: Annotated[
         bool,
-        typer.Option(
-            settings["general"]["save"], help="Save results to files for analysis"
-        ),
-    ],
+        typer.Option(help="Save results to files for analysis"),
+    ] = settings["general"]["save"],
     save_format: Annotated[
         SaveFormat,
         typer.Option(
-            SaveFormat(settings["general"]["save_format"]),
             help="Format for saving calculation results. Currently supperted: csv and xlsx",
         ),
-    ],
+    ] = SaveFormat(settings["general"]["save_format"]),
 ) -> None:
     """
     Perform risk analysis calculations and graphics.
@@ -393,23 +367,25 @@ def risk_analysis(
 
     if graphics:
         if risk_inf:
-            graphic_results["risk_ach_inf_graphics"] = risk_ach_graph(
+            graphic_results["risk_ach_inf_graphics"] = risk_ach_inf_graph(
                 risk_results["risk_ach_inf_data"], settings["graphics"]["color_scheme"]
             )
         if risk_aerosol:
-            graphic_results["risk_ach_aerosol_graphics"] = risk_aerosol_graph(
+            graphic_results["risk_ach_aerosol_graphics"] = risk_ach_aerosol_graph(
                 risk_results["risk_ach_aerosol_data"],
                 settings["graphics"]["color_scheme"],
             )
-    else:
-        save_graphics = False
+
+        if save_graphics:
+            graphics_output(results_folder, graphic_results)
+        else:
+            for graphic_result_batch in graphic_results:
+                for graph in graphic_result_batch.values():
+                    graph.show()
 
     # Saving data
     if save:
         save_data(data_folder, save_format.value, risk_results)
-
-    if save_graphics:
-        graphics_output(results_folder, graphic_results)
 
 
 # @app.command(name="dash")

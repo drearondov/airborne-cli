@@ -12,7 +12,7 @@ __pycache__/
 
 # Confoguration files & folders
 .DS_Store
-/.vscode/*
+.vscode/
 
 # Dynaconf secret files
 .secrets.*
