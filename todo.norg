@@ -1,0 +1,41 @@
+@document.meta
+title: Todo Document for Airborne CLI
+description: 
+authors: Andrea Rondón
+categories: 
+created: 2023-10-24T13:03:02-0500
+updated: 2023-10-24T16:05:05-0500
+version: 1.1.1
+@end
+
+* TASKS
+** General:
+*** Testing
+    - ( ) Setup Nox environment
+    - ( ) Write main tests
+    - ( ) Write settings tests
+    - ( ) Write backend tests
+*** Documentation
+    - (x) Write documentation strings for CLI
+    - ( ) Use MkDocs to compile documentation
+    - ( ) Use Diataxis method for compiling documentation
+*** Source Code
+    - (x) Write source code @done(22-08-31 14:53)
+    - (x) Write CLI code @done(22-08-31 14:53)
+    - (x) Refactor code @critical @done(22-09-03 15:46)
+
+** ACH:
+  - (x) Set defaults @done(22-08-24 10:50)
+  - (x) Write main function @done(22-08-31 14:51)
+
+** ASHRAE:
+  - (x) Write main function @done(22-08-31 14:51)
+
+
+** Plots:
+  - (x) Gráfica ACH - riesgo @done(22-08-31 14:51)
+  - (x) Gráfica ACH - aforo @done(22-08-31 14:51)
+
+* LOG:
+  - I think I'm going to remove the auto graphs function and create a separate command. I need to check what calculations and information is required to make the graphs.
+  - Already fixed the graphs and I'm ready to start testing and writing the documentation.

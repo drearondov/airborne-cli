@@ -2,26 +2,8 @@ import pytest
 import pandas as pd
 
 from loguru import logger
-from random import choice
 
-from airborne_cli.utils.io import check_data, load_data, make_results_folder
-
-
-def test_check_data(general_data):
-    assert check_data(general_data) is True
-
-    required_columns = [
-        "ambiente",
-        "area",
-        "altura",
-        "aforo_100",
-        "actividad",
-        "permanencia",
-    ]
-    dropped_data = general_data.drop(choice(required_columns), axis=1)
-
-    with pytest.raises(ValueError):
-        check_data(dropped_data)
+from airborne_cli.utils.io import load_data, make_results_folder
 
 
 class TestDataLoading:

@@ -17,7 +17,7 @@ Changelog = "https://github.com/drearondov/airborne-cli/releases"
 airborne = "airborne_cli.cli:app"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0.0"
+python = ">=3.10,<3.13"
 typer = ">=0.9.0"
 numpy = ">=1.23.1"
 pandas = ">=1.4.3"
@@ -57,7 +57,7 @@ nox = ">=2022.8.7"
 nox-poetry = ">=1.0.1"
 snakeviz = ">=2.1.1"
 mkdocs = "^1.4.2"
-mkdocstrings = {extras = ["python"], version = "^0.20.0"}
+mkdocstrings = { extras = ["python"], version = "^0.20.0" }
 mkdocs-material = "^9.1.0"
 mkdocs-typer = "^0.0.2"
 mkdocs-simple-blog = "^0.0.7"
@@ -69,6 +69,7 @@ sphinx-book-theme = "^1.0.0"
 loguru = "^0.7.2"
 pytest-loguru = "^0.3.0"
 pytest-cov = "^4.1.0"
+pandas-stubs = "^2.1.1.230928"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
@@ -76,7 +77,7 @@ tests = ["tests", "*/tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["airborne_cli", "tests"]
+source = ["airborne_cli"]
 
 [tool.coverage.report]
 show_missing = true
@@ -94,15 +95,11 @@ pretty = true
 show_column_numbers = true
 show_error_codes = true
 show_error_context = true
-python_executable = "$HOME/.pyenv/versions/3.11.0/envs/airborne-cli/bin/python"
+python_executable = "$HOME/.pyenv/versions/3.11.5/envs/airborne-cli/bin/python"
 
 [tool.pyright]
-venvPath = "/.pyenv/versions/3.11.0/envs/airborne-cli/bin"
+venvPath = "/.pyenv/versions/3.11.5/envs/airborne-cli/bin"
 venv = "airborne-cli"
-
-[tool.scriv]
-format = "md"
-fragment_directory = "changelog"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

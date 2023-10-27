@@ -18,6 +18,9 @@ from .io import show_ach
 from .io import show_ashrae
 from .io import show_general
 from .io import show_graphics
+from .validation import validate_occupancy_percentages
+from .validation import validate_infected_percentages
+from .validation import validate_hex_colors
 
 
 settings = load_config()
@@ -126,9 +129,13 @@ def general(
     aforo: Annotated[
         list[float],
         typer.Option(
-            help="Set default percentages to calculate occupancy",
+            help="Set default percentages to calculate occupancy. Percentages go from 0% to 100%",
+            callback=validate_occupancy_percentages,
         ),
     ] = settings["general"]["aforo"],
+    default_aerosol: Annotated[
+        AerosolCutoff, typer.Option(help="Set the default aerosol cutoff option")
+    ] = settings["general"]["default_aerosol"],
 ) -> None:
     """
     Sets general defaults for `run` command.
@@ -136,13 +143,14 @@ def general(
     settings = load_config()
 
     settings["general"]["ach"] = ach
-    settings["general"]["aashrae"] = ashrae
+    settings["general"]["ashrae"] = ashrae
     settings["general"]["graphics"] = graphics
     settings["general"]["interactive"] = interactive
     settings["general"]["save_graphics"] = save_graphics
     settings["general"]["save"] = save
     settings["general"]["save_format"] = save_format
     settings["general"]["aforo"] = aforo
+    settings["general"]["default_aerosol"] = default_aerosol
 
     save_config(settings)
 
@@ -167,6 +175,7 @@ def required_ach(
         list[int],
         typer.Option(
             help="Percentages of infected people to evaluate",
+            callback=validate_infected_percentages,
         ),
     ] = settings["ach"]["inf_percent"],
     viral_load: Annotated[
@@ -230,7 +239,8 @@ def graphics(
     color_scheme: Annotated[
         list[str],
         typer.Option(
-            help="List of colors to use in graphics",
+            help="List of colors to use in graphics. Currently only supports hex colors",
+            callback=validate_hex_colors,
         ),
     ] = settings["graphics"]["color_scheme"],
     format: Annotated[

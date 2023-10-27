@@ -1,8 +1,9 @@
 from pathlib import Path
-from numpy import dtype
 
 import pandas as pd
 import plotly.graph_objects as go
+
+from .validation import validate_existing_columns, validate_data_types, validate_input
 
 
 def load_data(data_in: Path) -> tuple[pd.DataFrame, Path]:
@@ -39,26 +40,13 @@ def check_data(data_frame: pd.DataFrame) -> bool:
 
     Args:
         data (pd.DataFrame): Data frame entered
-    """
-    required_columns = {
-        "ambiente": dtype("object"),
-        "area": dtype("float64"),
-        "altura": dtype("float64"),
-        "aforo_100": dtype("int64"),
-        "actividad": dtype("int64"),
-        "permanencia": dtype("float64"),
-    }
 
-    for column_name, column_type in required_columns.items():
-        if column_name in data_frame.columns:
-            if column_type != data_frame[column_name].dtype:
-                raise ValueError(
-                    f"[bold red]Alert![/bold red] Column {column_name} is not the correct type {column_type}"
-                )
-        else:
-            raise ValueError(
-                f"[bold red]Alert![/bold red] Column {column_name} not found. Is a required column"
-            )
+    Returns:
+        bool: does the data pass the validation
+    """
+    validate_existing_columns(data_frame.columns)
+    validate_data_types(data_frame)
+    validate_input(data_frame)
 
     return True
 

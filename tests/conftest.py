@@ -33,7 +33,7 @@ def general_data() -> pd.DataFrame:
         data["altura"].append(uniform(0, 15))
         data["aforo_100"].append(randint(0, 100))
         data["ACH_natural"].append(uniform(0, 50))
-        data["actividad"].append(randint(0, 5))
+        data["actividad"].append(randint(0, 3))
         data["permanencia"].append(uniform(0, 500))
 
     data_frame = pd.DataFrame.from_dict(data)
