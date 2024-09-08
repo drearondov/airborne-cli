@@ -10,7 +10,7 @@
 /src/*.egg-info/
 __pycache__/
 
-# Confoguration files & folders
+# Configuration files & folders
 .DS_Store
 .vscode/
 

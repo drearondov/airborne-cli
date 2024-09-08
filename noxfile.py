@@ -1,4 +1,5 @@
 """Nox sessions."""
+
 import os
 import shlex
 import shutil
@@ -23,7 +24,7 @@ except ImportError:
 
 
 package = "airborne_cli"
-python_versions = ["3.11", "3.10"]
+python_versions = ["3.9", "3.10", "3.11"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
     "pre-commit",
@@ -169,7 +170,7 @@ def tests(session: Session) -> None:
             session.notify("coverage", posargs=[])
 
 
-@session(python=python_versions[0])
+@session(python=python_versions[-1])
 def coverage(session: Session) -> None:
     """Produce the coverage report."""
     args = session.posargs or ["report"]
@@ -208,7 +209,7 @@ def xdoctest(session: Session) -> None:
 @session(name="docs-build", python=python_versions[0])
 def docs_build(session: Session) -> None:
     """Build the documentation."""
-    args = session.posargs or ["docs", "docs/_build"]
+    args = session.posargs or ["docs/src", "docs/_build"]
     if not session.posargs and "FORCE_COLOR" in os.environ:
         args.insert(0, "--color")
 
@@ -225,7 +226,7 @@ def docs_build(session: Session) -> None:
 @session(python=python_versions[0])
 def docs(session: Session) -> None:
     """Build and serve the documentation with live reloading on file changes."""
-    args = session.posargs or ["--open-browser", "docs", "docs/_build"]
+    args = session.posargs or ["--open-browser", "docs/src", "docs/_build"]
     session.install(".")
     session.install("sphinx", "sphinx-autobuild", "sphinx-click", "furo", "myst-parser")
 
