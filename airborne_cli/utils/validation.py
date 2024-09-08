@@ -1,8 +1,8 @@
 """
 Validate input file for required fields, datatypes and values.
 """
-import pandas as pd
 
+import pandas as pd
 from numpy import dtype
 
 
@@ -88,7 +88,7 @@ def validate_input(data_frame: pd.DataFrame) -> bool:
         )
 
     # Validating activity
-    if not data_frame["actividad"].between(0, 2, inclusive="both").any():
+    if not data_frame["actividad"].between(0, 2, inclusive="both").all():
         raise ValueError(
             "[bold red]Alert![/bold red] One of the activity values in the document is outside of the permitted input values 0, 1, 2"
         )

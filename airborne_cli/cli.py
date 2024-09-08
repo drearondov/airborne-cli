@@ -1,20 +1,26 @@
 from itertools import product
 from math import ceil
 from pathlib import Path
-from typing_extensions import Annotated
 
 import typer
+from typing_extensions import Annotated
 
 from .lib.ach import ach_required
 from .lib.ashrae import ashrae_calculation
-from .lib.graphics import (
-    risk_ach_aerosol_graph,
-    risk_ach_inf_graph,
-)
-from .lib.risk import ach_risk_inf_percent_calculation, ach_risk_aerosol_calculation
-from .settings.config import config_app, settings
-from .utils.io import graphics_output, load_data, save_data, make_results_folder
-from .utils.options import AerosolCutoff, MaskType, SaveFormat, ViralLoad
+from .lib.graphics import risk_ach_aerosol_graph
+from .lib.graphics import risk_ach_inf_graph
+from .lib.risk import ach_risk_aerosol_calculation
+from .lib.risk import ach_risk_inf_percent_calculation
+from .settings.config import config_app
+from .settings.config import settings
+from .utils.io import graphics_output
+from .utils.io import load_data
+from .utils.io import make_results_folder
+from .utils.io import save_data
+from .utils.options import AerosolCutoff
+from .utils.options import MaskType
+from .utils.options import SaveFormat
+from .utils.options import ViralLoad
 
 
 app = typer.Typer(
@@ -36,7 +42,7 @@ def run(
     ach: Annotated[
         bool,
         typer.Option(
-            help="Calculate Required ACH calculations with default values",
+            help="Calculate Required ACH calculations to stay below % risk of infection with default values",
         ),
     ] = settings["general"]["ach"],
     ashrae: Annotated[
@@ -48,7 +54,7 @@ def run(
     risk: Annotated[
         bool,
         typer.Option(
-            help="Perform risk analysis for different conditions",
+            help="Perform risk of covid-19 infection analysis for different conditions",
         ),
     ] = settings["general"]["risk"],
     graphics: Annotated[
@@ -74,7 +80,7 @@ def run(
             help="Format for saving calculation results. Currently supperted: .csv and .xlsx",
         ),
     ] = SaveFormat(settings["general"]["save_format"]),
-) -> None:
+) -> None:  # noqa: C901
     """
     Shortcut function to run calculation with default values.
     By default runs Required ACH, ASHRAE ventilation requirement calculations using default values and makes and saves graphics.
@@ -242,9 +248,11 @@ def required_ach(
                 x["Actividad"],
                 x["Permanencia"],
                 set_risk=max_risk / 100,
-                mask_type=int(mask_type.name[-1])
-                if mask_type != MaskType.i5
-                else x["Mask Type"],
+                mask_type=(
+                    int(mask_type.name[-1])
+                    if mask_type != MaskType.i5
+                    else x["Mask Type"]
+                ),
                 inf_percent=percent,
                 viral_load=int(viral_load.value),
                 cutoff_type=int(aerosol.name[-1]),
@@ -342,7 +350,7 @@ def risk_analysis(
             help="Format for saving calculation results. Currently supperted: csv and xlsx",
         ),
     ] = SaveFormat(settings["general"]["save_format"]),
-) -> None:
+) -> None:  # noqa: C901
     """
     Perform risk analysis calculations and graphics.
     """

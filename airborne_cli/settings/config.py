@@ -1,8 +1,8 @@
-"""CLI module for config, hold the CLI commands as well as the logic for showing and updating the configuration file.
+"""
+Typer CLI app for config. CLI commands and logic for showing and updating the configuration file.
 """
 
 import typer
-
 from rich.console import Console
 from typing_extensions import Annotated
 
@@ -18,9 +18,9 @@ from .io import show_ach
 from .io import show_ashrae
 from .io import show_general
 from .io import show_graphics
-from .validation import validate_occupancy_percentages
-from .validation import validate_infected_percentages
 from .validation import validate_hex_colors
+from .validation import validate_infected_percentages
+from .validation import validate_occupancy_percentages
 
 
 settings = load_config()
@@ -32,9 +32,7 @@ config_app = typer.Typer(help="Modify configuration for Airborne CLI")
 
 @config_app.command()
 def show(
-    all: Annotated[
-        bool, typer.Option(help="Show all configurations available")
-    ] = False,
+    all: Annotated[bool, typer.Option(help="Show all configurations available")] = True,
     general: Annotated[
         bool, typer.Option(help="Show available options for general configuration.")
     ] = False,

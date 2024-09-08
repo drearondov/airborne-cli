@@ -1,12 +1,14 @@
 from pathlib import Path
 
 import pandas as pd
-import plotly.graph_objects as go
+import plotly.graph_objects as go  # type:ignore
 
-from .validation import validate_existing_columns, validate_data_types, validate_input
+from .validation import validate_data_types
+from .validation import validate_existing_columns
+from .validation import validate_input
 
 
-def load_data(data_in: Path) -> tuple[pd.DataFrame, Path]:
+def load_data(data_in: Path) -> tuple[pd.DataFrame, Path] | None:
     """Loads the data from the specified path
 
     Args:
@@ -33,6 +35,8 @@ def load_data(data_in: Path) -> tuple[pd.DataFrame, Path]:
 
     if check_data(data):
         return (data, data_folder)
+
+    return None
 
 
 def check_data(data_frame: pd.DataFrame) -> bool:

@@ -1,8 +1,8 @@
 [general]
 ach = false
 ashrae = true
-risk = true
-graphics = true
+risk = false
+graphics = false
 interactive = false
 save_graphics = true
 save = true

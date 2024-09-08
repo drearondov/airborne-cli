@@ -2,18 +2,19 @@
 Module tha hold the import and exprt functions for the configuration app.
 """
 
-import tomlkit
+from pathlib import Path
+from typing import Any
 
+import tomlkit
 from rich import print
 from rich.panel import Panel
 from rich.table import Table
+from tomlkit import document
+from tomlkit import nl
+from tomlkit import table
 
-from pathlib import Path
 
-from tomlkit import document, nl, table
-
-
-def load_config() -> dict:
+def load_config() -> dict[str, Any]:
     """Loads TOML configuration file and returns a dictionary with all the variables.
 
     Returns:
@@ -93,7 +94,7 @@ def generate_config() -> tomlkit.TOMLDocument:
     return config
 
 
-def save_config(config: tomlkit.TOMLDocument) -> None:
+def save_config(config: dict[str, Any]) -> None:
     """Saves new configuration file.
 
     Args:
@@ -116,7 +117,7 @@ def show_general() -> Panel:
     table = Table(show_header=False, box=None)
 
     for key, value in settings["general"].items():
-        if type(value) is list:
+        if isinstance(type(value), list):
             table.add_row(key, f"{value}")
         else:
             table.add_row(key, f"{value}")
@@ -171,7 +172,7 @@ def show_graphics() -> Panel:
     table = Table(show_header=False, box=None)
 
     for key, value in settings["graphics"].items():
-        if type(value) is list:
+        if isinstance(type(value), list):
             table.add_row(key, f"{value}")
         else:
             table.add_row(key, f"{value}")
