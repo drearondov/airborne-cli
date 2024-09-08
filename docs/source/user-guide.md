@@ -87,7 +87,7 @@ present:
 During data processing, there are three main aspects being calculated:
 
 - Required ACH calculations for a set maximum risk
-- Required ventilation required in the room according to ASHRAE 62.1
+- Required ventilation in the room according to ASHRAE 62.1
 - Variation in risk for different parameters
 
 ## Results
