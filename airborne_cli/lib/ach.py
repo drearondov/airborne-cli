@@ -2,6 +2,7 @@ from math import ceil
 from math import exp
 
 import numpy as np
+import pandas as pd
 
 
 def infected_people(people: int, percent: float, infmin: int, toggle_inf: bool) -> int:
@@ -22,34 +23,68 @@ def infected_people(people: int, percent: float, infmin: int, toggle_inf: bool) 
     return infected
 
 
-def gaussian_distribution(n_people: int = 10, permanence: float = 120, t: float = 0):
+def gaussian_distribution(
+    n_people: int = 10, permanence: float = 120, t: float = 0
+) -> float:
     b = permanence / 2
     c = permanence / 6
     return n_people * exp(-((t - b) ** 2) / ((2 * c) ** 2))
 
 
-# Default values
+def people_inst(
+    t: float,
+    inf_percent: float = 10,
+    inf_min: int = 1,
+    n_people: int = 10,
+    occupancy_type: int = 0,
+    inf_checked: bool = True,
+    permanence: float = 120,
+) -> dict[str, float]:
+    """Calculates people over time
+
+    Args:
+        t: Time at which calculate the number of people
+        inf_percent: Percentage of infected people
+        inf_min: Minimum of infected people
+        n_people: Number f people in the room
+        occupancy_type: Gether it's a constant occupancy of a Gaussian distribution
+        inf_checked: Are they infected individuals or not
+        permanence: Time of permanence in seconds
+
+    Returns:
+        dict: The number of people, and infected people at a specific time
+    """
+    people = (
+        n_people
+        if occupancy_type == 0
+        else gaussian_distribution(n_people, permanence, t)
+    )
+    infected = infected_people(ceil(people), inf_percent, inf_min, inf_checked)
+
+    return {"people": people, "infected": infected}
+
+
 def room_calculation(
     Ar: float = 100,
     Hr: float = 3,
-    s_ACH_type=6,
-    inf_percent: float = 10,
-    inf_min=1,
-    n_people=10,
-    Vli=10,
-    mask_type=1,
-    activity_type=0,
-    mask_type_sick=1,
-    activity_type_sick=0,
-    cutoff_type=3,
-    verticalv_type=0,
-    occupancy_type=0,
-    permanence=120,
+    s_ACH_type: int = 6,
+    n_people: int = 10,
+    Vli: int = 10,
+    mask_type: int = 1,
+    activity_type: int = 0,
+    mask_type_sick: int = 1,
+    activity_type_sick: int = 0,
+    cutoff_type: int = 3,
+    verticalv_type: int = 0,
+    permanence: float = 120,
     ACH_custom: float = 20,
-    s_filter_type=0,
-    outside_air=100,
-    inf_checked=True,
-) -> tuple:
+    inf_checked: bool = True,
+    inf_percent: float = 10,
+    inf_min: int = 1,
+    occupancy_type: int = 0,
+    s_filter_type: int = 0,
+    outside_air: int = 100,
+) -> pd.DataFrame:
     """Returns a tuple containing data of the risk of infection.
 
     Args:
@@ -74,20 +109,8 @@ def room_calculation(
         inf_checked (bool, optional): Whether the infected percentage toggle is active. Defaults to True.
 
     Returns:
-        Tuple: [description]
+        pd.DataFrame: Dataframe with columns for time, risk, inhalation rate, virus concentration, infected people and people over time
     """
-
-    # People over time
-    def people_inst(permanence, t) -> dict:
-        people = (
-            n_people
-            if occupancy_type == 0
-            else gaussian_distribution(n_people, permanence, t)
-        )
-        infected = infected_people(ceil(people), inf_percent, inf_min, inf_checked)
-
-        return {"people": people, "infected": infected}
-
     #   Filter in the ventilation system based on the modes set at the interface
     #   These values of filter efficiency need changing according to
     #   https:#www.venfilter.com/normativa/comparative-guide-norms-classification-air-filters
@@ -213,35 +236,6 @@ def room_calculation(
     ]  # ... set gravitational settling rate, 1/h
     delta = 0.636  # ... viral decay rate, 1/h
 
-    # Define background CO2 (hope this does not change a lot...)
-    co2_background = 415  # ... CO2 outdoors, ppm
-
-    # Base value for CO2 emission (based on https:#doi.org/10.1111/ina.12383)
-    # H_forCO2 = 1.8; # height of individual, m
-    # W_forCO2 = 80; # weight of individual, kg
-    # AD_forCO2 = 0.202*Math.pow(H_forCO2,0.725)*Math.pow(W_forCO2,0.425); # DuBois surface area, m^2
-    AD_forCO2 = 1.8  # averaged size adult, DuBois surface area, m^2
-    RQ_forCO2 = 0.85  # respiratory quotient (dimensionless)
-    co2_exhRate_without_met = (0.00276 * AD_forCO2 * RQ_forCO2) / (
-        0.23 * RQ_forCO2 + 0.77
-    )  # ltr/s/met
-    met_ref = 1.15  # reference metabolic rate, met
-    co2_exhRate_ref = (
-        co2_exhRate_without_met * met_ref
-    )  # ... indicative CO2 emission rate, ltr/s
-
-    # Metabolic rate applied to to co2_exhRate_ref (based on https:#doi.org/10.1111/ina.12383).
-    # (i) sitting/breathing, (ii) standing/light exercise, (iii) heavy exercise
-    # in the paper these are taken for:
-    # (i) average from range in sitting quietly 1.15 met (see met_ref above)
-    # (ii) standing quietly,  light exercise  1.3 met
-    # (iii) calisthenics, moderate effort 3.8 met
-    metabolic_rate_forCO2 = [
-        met_ref,
-        1.3,
-        3.8,
-    ]  # metabolic rate based on activity, met
-
     # Base value for inhalation rate
     inhRate_pure = 0.521  # ... inhalation rate, ltr/s,
 
@@ -281,9 +275,6 @@ def room_calculation(
     inhRate = (
         inhRate_pure * (1 - Mask_type[mask_type]) * Activity_type_inh[activity_type]
     )  # ... actual inhlation rate, ltr/s
-    co2_exhRate = (
-        co2_exhRate_ref * metabolic_rate_forCO2[activity_type]
-    ) / met_ref  # ... actual CO2 emission rate, ltr/s
 
     # Here we need an "effective" N_gen for aerosol particles
     # First five values are for zero vertical velocity and last five values are for 0.1 m/s upward vertical velocity
@@ -315,9 +306,6 @@ def room_calculation(
 
     # Additional variables
     V = Ar * Hr  # ... room volume, m^3
-    Vperson = round(
-        (ACH / 3600) * (V * 1000) * (1 / n_people)
-    )  # ... ventilation rate, l/s/person
 
     # Conversions
     kappa = kappa / 3600  # ... 1/s
@@ -330,10 +318,6 @@ def room_calculation(
     steril_rate = filterEff * (ACH_recirc / 3600)  # 1/s
 
     loss_rate = vent_fresh + steril_rate + kappa + delta
-    loss_rate_co2 = vent_fresh
-
-    co2_exhRate = co2_exhRate / 1000  # ,,, m3/s
-    co2_exhRate = co2_exhRate * 10**6  # ...scale to calculate ppm in the end
 
     # Find minimum and maximum time for each event in seconds
     t0 = 0
@@ -344,105 +328,163 @@ def room_calculation(
     dt = tMax / 400  # ... time increment, s
 
     # Initialisation
-    R = []  # ... Risk over time
-    C = []  # ... concentration vector, PFU/m3
-    Ninh = []  # ... inhaled virus vector, PFU
-    XCO2 = []  # ... CO2 mole fraction vector, ppm
-    people_over_time = []  # ... total number of people within room, #
-    infected_people_over_time = []  # ... total number of people within room, #
+    time_series = np.arange(start=t0, stop=tMax, step=dt)
 
-    time_series = np.arange(start=t0, stop=tMax, step=dt).tolist()
+    result = pd.DataFrame(time_series, columns=["time"])
 
-    people_over_time = [people_inst(tMax, t)["people"] for t in time_series]
-    infected_people_over_time = [people_inst(tMax, t)["infected"] for t in time_series]
+    result["people"] = result["time"].apply(
+        lambda x: people_inst(
+            x["time"],
+            inf_percent,
+            inf_min,
+            n_people,
+            occupancy_type,
+            inf_checked,
+            tMax,
+        )["people"]
+    )
 
-    for i in range(len(time_series)):
-        t = time_series[i]
-        hasPeople = people_over_time[i] > 0
+    result["infected"] = result["time"].apply(
+        lambda x: people_inst(
+            x["time"],
+            inf_percent,
+            inf_min,
+            n_people,
+            occupancy_type,
+            inf_checked,
+            tMax,
+        )["infected"]
+    )
 
-        try:
-            # Virus concentration
-            C.append(
-                (hasPeople * people_inst(tMax, t)["infected"] * N_r) / (V * loss_rate)
-                + (
-                    C[i - 1]
-                    - (hasPeople * people_inst(tMax, t)["infected"] * N_r)
-                    / (V * loss_rate)
-                )
-                * exp(-loss_rate * dt)
-            )
+    result["virus_concentration"] = (result["infected"] * N_r) / (V * loss_rate) + (
+        result["virus_concentration"].shift(1)
+        - (result["infected"] * N_r) / (V * loss_rate)
+    ) * exp(-loss_rate * dt)
 
-            # CO2 Concentration
-            if loss_rate_co2 > 0.0:
-                XCO2.append(
-                    co2_background
-                    + (hasPeople * people_inst(tMax, t)["people"] * co2_exhRate)
-                    / (V * loss_rate_co2)
-                    + (
-                        XCO2[i - 1]
-                        - (hasPeople * people_inst(tMax, t)["people"] * co2_exhRate)
-                        / (V * loss_rate_co2)
-                    )
-                    - (co2_background * exp(-loss_rate_co2 * dt))
-                )
-            else:
-                # account for case where loss_rate_co2 is zero and the previous equation is not defined
-                XCO2.append(
-                    XCO2[i - 1]
-                    + ((hasPeople * people_inst(tMax, t)["people"] * co2_exhRate) / V)
-                    * dt
-                )
+    result["inhaled_virus"] = (
+        result["inhaled_virus"].shift(1) + inhRate * dt * result["virus_concentration"]
+    )
 
-            # Inhaled virus
-            Ninh.append(Ninh[i - 1] + hasPeople * inhRate * dt * C[i])
-            R.append(1 - exp(-Ninh[i] / risk))
-        except IndexError:
-            # Virus concentration
-            C.append(
-                (hasPeople * people_inst(tMax, t)["infected"] * N_r) / (V * loss_rate)
-                + (
-                    0
-                    - (hasPeople * people_inst(tMax, t)["infected"] * N_r)
-                    / (V * loss_rate)
-                )
-                * exp(-loss_rate * dt)
-            )
-
-            # CO2 Concentration
-            if loss_rate_co2 > 0.0:
-                XCO2.append(
-                    co2_background
-                    + (hasPeople * people_inst(tMax, t)["people"] * co2_exhRate)
-                    / (V * loss_rate_co2)
-                    + (
-                        co2_background
-                        - (hasPeople * people_inst(tMax, t)["people"] * co2_exhRate)
-                        / (V * loss_rate_co2)
-                    )
-                    - (co2_background * exp(-loss_rate_co2 * dt))
-                )
-            else:
-                # account for case where loss_rate_co2 is zero and the previous equation is not defined
-                XCO2.append(
-                    co2_background
-                    + ((hasPeople * people_inst(tMax, t)["people"] * co2_exhRate) / V)
-                    * dt
-                )
-
-            # Inhaled virus
-            Ninh.append(hasPeople * inhRate * dt * C[i])
-            R.append(1 - exp(-Ninh[i] / risk))
+    result["risk"] = result.apply(lambda x: 1 - exp(-x["inhaled_virus"] / risk))
 
     # Final result
-    return (
-        C,
-        R,
-        XCO2,
-        people_over_time,
-        infected_people_over_time,
-        time_series,
-        Vperson,
+    return result
+
+
+def co2_concentration(
+    Ar: float = 100,
+    Hr: float = 3,
+    inf_percent: float = 10,
+    inf_min: int = 1,
+    n_people: int = 10,
+    occupancy_type: int = 0,
+    inf_checked: bool = True,
+    activity_type: int = 0,
+    outside_air: int = 100,
+    permanence: float = 120,
+    ACH_custom: float = 20,
+    s_ACH_type: int = 6,
+) -> pd.DataFrame:
+    """Calculates the conentration of CO2 in the room over time
+
+    Args:
+        Ar (int, optional): Area of the room. Defaults to 100.
+        Hr (int, optional): Height of the room. Defaults to 3.
+        inf_percent (int, optional): Percentage of infected people. Defaults to 20.
+        inf_min (int, optional): Minimum of infected people. Defaults to 1.
+        n_people (int, optional): Number of people in the room. Defaults to 10.
+        occupancy_type (int, optional): [description]. Defaults to 0.
+        inf_checked (bool, optional): Whether the infected percentage toggle is active. Defaults to True.
+        activity_type (int, optional): [description]. Defaults to 0.
+        outside_air (int, optional): [description]. Defaults to 100.
+        permanence (int, optional): Time of permanence in the room in minutes. Defaults to 60.
+        ACH_custom (int, optional): Custom value of ACH. Defaults to 1.
+        s_ACH_type (int, optional): Selection of type of ACH. Defaults to 6 which means custom.
+
+    Returns:
+        pd.DataFrame: DataFrame with the columns of people over time and concentration of CO2
+    """
+    t0 = 0
+    tMax = permanence * 60
+    dt = tMax / 400  # ... time increment, s
+    time_series = np.arange(start=t0, stop=tMax, step=dt).tolist()
+
+    V = Ar * Hr  # ... room volume, m^3
+
+    result = pd.DataFrame(time_series, columns=["time"])
+
+    result["n_people"] = result.apply(
+        lambda x: people_inst(
+            x["time"],
+            inf_percent,
+            inf_min,
+            n_people,
+            occupancy_type,
+            inf_checked,
+            tMax,
+        )["people"]
     )
+
+    # Define background CO2 (hope this does not change a lot...)
+    co2_background = 415  # ... CO2 outdoors, ppm
+
+    # Base value for CO2 emission (based on https:#doi.org/10.1111/ina.12383)
+    # H_forCO2 = 1.8; # height of individual, m
+    # W_forCO2 = 80; # weight of individual, kg
+    # AD_forCO2 = 0.202*Math.pow(H_forCO2,0.725)*Math.pow(W_forCO2,0.425); # DuBois surface area, m^2
+    AD_forCO2 = 1.8  # averaged size adult, DuBois surface area, m^2
+    RQ_forCO2 = 0.85  # respiratory quotient (dimensionless)
+    co2_exhRate_without_met = (0.00276 * AD_forCO2 * RQ_forCO2) / (
+        0.23 * RQ_forCO2 + 0.77
+    )  # ltr/s/met
+    met_ref = 1.15  # reference metabolic rate, met
+
+    # Metabolic rate applied to to co2_exhRate_ref (based on https:#doi.org/10.1111/ina.12383).
+    # (i) sitting/breathing, (ii) standing/light exercise, (iii) heavy exercise
+    # in the paper these are taken for:
+    # (i) average from range in sitting quietly 1.15 met (see met_ref above)
+    # (ii) standing quietly,  light exercise  1.3 met
+    # (iii) calisthenics, moderate effort 3.8 met
+    metabolic_rate_forCO2 = [
+        met_ref,
+        1.3,
+        3.8,
+    ]  # metabolic rate based on activity, met
+
+    co2_exhRate_ref = (
+        co2_exhRate_without_met * met_ref
+    )  # ... indicative CO2 emission rate, ltr/s
+
+    co2_exhRate = (
+        co2_exhRate_ref * metabolic_rate_forCO2[activity_type]
+    ) / met_ref  # ... actual CO2 emission rate, ltr/s
+
+    co2_exhRate = co2_exhRate / 1000  # ... m3/s
+    co2_exhRate = co2_exhRate * 10**6  # ...scale to calculate ppm in the end
+
+    # Sets ACH based on the modes set at the interface
+    sACH = [0.3, 1, 3, 5, 10, 20, 999]
+    ACH = ACH_custom if s_ACH_type == 6 else sACH[s_ACH_type]
+    ACH_fresh = (ACH * outside_air) / 100  # ...1/h
+    vent_fresh = ACH_fresh / 3600  # ... 1/s
+    loss_rate_co2 = vent_fresh
+
+    if loss_rate_co2 > 0:
+        result["co2"] = co2_background + (
+            (result["n_people"] * co2_exhRate) / V / loss_rate_co2
+            + (
+                (result["co2"].shift(1) or co2_background)
+                - (result["n_people"] * co2_exhRate) / V / loss_rate_co2
+                - co2_background
+            )
+            * exp(-loss_rate_co2 * dt)
+        )
+    else:
+        result["co2"] = (result["co2"].shift(1) or co2_background) + (
+            (result["n_people"] * co2_exhRate) / V
+        ) * dt
+
+    return result
 
 
 def ach_required(
@@ -471,12 +513,12 @@ def ach_required(
     Returns:
         List: Lista con las ACH obtenidas y el riesgo máximo
     """
-    max_risk = 1
-    ACH_custom = 0
+    max_risk = 1.0
+    ACH_custom = 0.0
 
     while max_risk > set_risk:
         ACH_custom += 0.1
-        (_, R, _, _, _, _, _) = room_calculation(
+        results = room_calculation(
             Ar=area,
             Hr=altura,
             n_people=aforo,
@@ -491,7 +533,7 @@ def ach_required(
             cutoff_type=cutoff_type,
         )
 
-        max_risk = R[-1]
+        max_risk = results.iloc[-1]["risk"]
 
     return ACH_custom
 
@@ -512,8 +554,8 @@ def risk_calculation(
     Returns:
         List: lista con el ACH obtenido y el riesgo máximo
     """
-    max_risk = 1
-    ACH_custom = 0
+    max_risk = 1.0
+    ACH_custom = 0.0
 
     while max_risk > 0.03:
         ACH_custom += 0.1

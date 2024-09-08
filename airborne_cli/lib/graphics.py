@@ -1,6 +1,6 @@
 import pandas as pd
-import plotly.graph_objects as go
-import plotly.io as pio
+import plotly.graph_objects as go  # type:ignore
+import plotly.io as pio  # type:ignore
 
 from ..settings.config import settings
 
@@ -14,7 +14,7 @@ def graphics_config() -> None:
     pio.kaleido.scope.default_scale = settings["graphics"]["scale"]
 
 
-def risk_ach_inf_graph(data: pd.DataFrame, colors: list) -> dict[str, go.Figure]:
+def risk_ach_inf_graph(data: pd.DataFrame, colors: list[str]) -> dict[str, go.Figure]:
     """Makes Risk vs ACH graphs for the data given. Considers different percentages of occupancy
 
     Args:
@@ -138,7 +138,9 @@ def risk_ach_inf_graph(data: pd.DataFrame, colors: list) -> dict[str, go.Figure]
     return pabellon_figs
 
 
-def risk_ach_aerosol_graph(data: pd.DataFrame, colors: list) -> dict[str, go.Figure]:
+def risk_ach_aerosol_graph(
+    data: pd.DataFrame, colors: list[str]
+) -> dict[str, go.Figure]:
     """Makes graph of Max risk vs. Flow Rate
 
     Args:

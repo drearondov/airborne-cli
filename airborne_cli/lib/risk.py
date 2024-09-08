@@ -22,7 +22,7 @@ def ach_risk_inf_percent_calculation(
     ach_list = np.geomspace(0.5, 50, num=25).tolist()
     occupancy_list = [0.3, 0.4, 0.5, 0.7, 0.9, 1]
 
-    results = {
+    results: dict[str, list[str | int | float | list[float]]] = {
         "ambiente": [],
         "pabellon": [],
         "Aforo_100": [],
@@ -93,7 +93,7 @@ def ach_risk_aerosol_calculation(
     ach_list = np.geomspace(0.5, 50, num=25).tolist()
     occupancy_list = [0.3, 0.4, 0.5, 0.7, 0.9, 1]
 
-    results = {
+    results: dict[str, list[str | int | float | list[float]]] = {
         "ambiente": [],
         "volumen": [],
         "pabellon": [],
@@ -140,10 +140,10 @@ def ach_risk_aerosol_calculation(
                     inf_percent=10,
                     cutoff_type=cutoff,
                 )
-                results[f"aforo_{occupancy*100}_{cutoff}_um"].append(
+                results[f"aforo_{occupancy * 100}_{cutoff}_um"].append(
                     ceil(ambiente.Aforo_100 * occupancy)
                 )
-                results[f"riesgo_{occupancy*100}_{cutoff}_um"].append(R[-1])
+                results[f"riesgo_{occupancy * 100}_{cutoff}_um"].append(R[-1])
 
     results_df = pd.DataFrame.from_dict(results)
 
@@ -152,5 +152,5 @@ def ach_risk_aerosol_calculation(
     return results_df
 
 
-def ach_risk_co2_calculation():  # TODO: New CO2 risk feature
-    """ """
+# def ach_risk_co2_calculation():  # TODO: New CO2 risk feature
+#     """ """

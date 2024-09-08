@@ -1,10 +1,11 @@
 from math import ceil
+from typing import Any
 
 import pandas as pd
 
 
 def ashrae_calculation(
-    data: pd.DataFrame, occupancy_perc: float, ashrae_data: dict
+    data: pd.DataFrame, occupancy_perc: float, ashrae_data: dict[str, Any]
 ) -> pd.DataFrame:
     """Función que calcula el flujo necesario para asegurar condiciones de ventilación de los ambientes
         de acuerdo con las recomendaciones de la norma ASHRAE 62.1
